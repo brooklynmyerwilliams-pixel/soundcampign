@@ -7,7 +7,7 @@ import storyTop from "@/assets/story-top.jpg.asset.json";
 import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
 import creatorsList from "@/assets/creators-list.jpg.asset.json";
-import releasesList from "@/assets/releases-list.png.asset.json";
+import releasesList from "@/assets/releases-list.jpg.asset.json";
 import tiktokChart from "@/assets/tiktok-chart.png.asset.json";
 import artistWall from "@/assets/artist-wall.png.asset.json";
 import avatarTyrone from "@/assets/avatar-tyrone.png.asset.json";
@@ -437,7 +437,7 @@ function Landing() {
           src={releasesList.url}
           alt="Campaign releases with days left and details"
           loading="lazy"
-          className="w-full"
+          className="mx-auto w-full max-w-md rounded-2xl"
         />
 
       </section>
