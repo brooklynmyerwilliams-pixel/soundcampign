@@ -44,8 +44,8 @@ export const Route = createFileRoute("/auth")({
 
 const signupSchema = z.object({
   fullName: z.string().trim().min(2, "Enter your full name").max(80),
-  username: z.string().trim().min(3, "Username must be at least 3 characters").max(30)
-    .regex(/^[a-zA-Z0-9_.]+$/, "Username can only contain letters, numbers, _ and ."),
+  username: z.string().min(3, "Username must be at least 3 characters").max(30)
+    .regex(/^(?=.*[A-Za-z])[A-Za-z0-9]+$/, "Username must be one word with letters only, or letters and numbers (e.g. SoundCamp26) — no spaces or symbols"),
   email: z.string().trim().email("Enter a valid email").max(255),
   password: z.string().min(6, "Password must be at least 6 characters").max(72),
   confirmPassword: z.string(),
@@ -183,7 +183,7 @@ function AuthPage() {
       if (error) throw error;
       const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (signInError) {
-        setMsg("Account created. Please check your email to confirm your address, then sign in.");
+        setMsg("Account created. Please sign in with your username or email and password.");
         setMode("signin");
         return;
       }
