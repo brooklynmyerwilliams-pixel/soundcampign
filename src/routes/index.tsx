@@ -4,7 +4,7 @@ import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
 import tiktokPhones from "@/assets/tiktok-phones.png.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
 import storyTop from "@/assets/story-top.png.asset.json";
-import worldMap from "@/assets/world-map.png.asset.json";
+import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
 import creatorsList from "@/assets/creators-list.png.asset.json";
 import releasesList from "@/assets/releases-list.png.asset.json";
