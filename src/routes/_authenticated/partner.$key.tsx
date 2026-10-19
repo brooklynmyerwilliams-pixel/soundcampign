@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Link, Navigate, useNavigate, useParams } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatMoney, MUSIC_PARTNERS } from "@/lib/hooks";
@@ -17,6 +18,7 @@ import { adjustBalance, holdValue } from "@/lib/balance";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/partner/$key")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Music Partner \u2014 SoundCampaign"},

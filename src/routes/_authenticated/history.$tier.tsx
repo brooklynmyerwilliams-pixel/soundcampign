@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe } from "@/lib/hooks";
@@ -13,6 +14,7 @@ const TIER_NAMES: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/_authenticated/history/$tier")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Submission Records — SoundCampaign"},

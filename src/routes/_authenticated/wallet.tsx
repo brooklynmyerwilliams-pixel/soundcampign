@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatNaira, formatMoney, useOnHold } from "@/lib/hooks";
@@ -8,6 +9,7 @@ import { Wallet as WalletIcon, Clock, ArrowDownToLine, ArrowUpFromLine, Plus, In
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authenticated/wallet")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Wallet — SoundCampaign"},

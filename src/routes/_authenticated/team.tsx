@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatNaira } from "@/lib/hooks";
@@ -17,6 +18,7 @@ const TIER_GROUPS = [
 ] as const;
 
 export const Route = createFileRoute("/_authenticated/team")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Team History \u2014 SoundCampaign"},

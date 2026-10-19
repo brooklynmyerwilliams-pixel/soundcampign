@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,6 +26,7 @@ import { Calendar, Trophy, Crown, Gem, Shield, Award, Gift, Lock, Check } from "
 
 
 export const Route = createFileRoute("/_authenticated/activities")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Activities \u2014 SoundCampaign"},

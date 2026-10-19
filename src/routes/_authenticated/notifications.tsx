@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe } from "@/lib/hooks";
@@ -5,6 +6,7 @@ import { Bell, Megaphone, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/notifications")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Notifications \u2014 SoundCampaign"},

@@ -13,3 +13,4 @@
 - Use the pure account-pairing helper to group administrator account lists by profiles.referred_by, never positional sorting, so filtering and multiple referrals preserve the true relationship.
 - Derive displayed membership counts from WAREHOUSE_TIERS rather than legacy vip_plans rows, so overview totals match the membership selector without changing stored user ranks.
 - Keep public sharing-image metadata in a browser-safe shared module and serve its compact JPEG from public; absolute first-party URLs let social crawlers fetch the same cover shown on public pages.
+- Gate every _authenticated page with the role-guard helpers (requireAdminPanel / requireUserPanel) in beforeLoad, so admins and members each land only in their own panel; server functions still verify roles themselves.

@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatNaira } from "@/lib/hooks";
@@ -5,6 +6,7 @@ import { Users, TrendingUp, Trophy, Sparkles, ArrowDownToLine, ArrowUpFromLine, 
 import { useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/community")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Community \u2014 SoundCampaign"},

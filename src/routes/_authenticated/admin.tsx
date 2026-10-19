@@ -1,3 +1,4 @@
+import { requireAdminPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useMe, formatNaira } from "@/lib/hooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -42,6 +43,7 @@ import { useAllChats, useChatRealtime } from "@/lib/chat";
 import { useSeen } from "@/components/admin/seen-store";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  beforeLoad: () => requireAdminPanel(),
   head: () => ({
     meta: [
       {"title": "Administrator Panel \u2014 SoundCampaign"},

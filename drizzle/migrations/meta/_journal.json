@@ -15,6 +15,13 @@
       "when": 1791685137900,
       "tag": "0001_admin_grants_and_reward_kind",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792418235904,
+      "tag": "0002_apply_imported_schema",
+      "breakpoints": true
     }
   ]
 }
