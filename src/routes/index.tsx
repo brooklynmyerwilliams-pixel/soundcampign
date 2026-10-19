@@ -371,7 +371,7 @@ function Landing() {
             src={tiktokPhones.url}
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
-            className="pointer-events-none mx-auto -mt-4 w-[78%] max-w-[420px] select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[440px] lg:w-[42%] lg:-translate-y-1/2"
+            className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
           />
         </div>
       </section>
@@ -383,7 +383,7 @@ function Landing() {
           src={creatorsList.url}
           alt="TikTok creators with follower and like counts"
           loading="lazy"
-          className="w-full"
+          className="mx-auto w-full max-w-md rounded-2xl"
         />
 
         <div>
