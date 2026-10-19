@@ -14,7 +14,7 @@ import { useI18n } from "@/lib/i18n";
 function BrandMark({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <img src={scMark.url} alt="SoundCampaign logo" width={32} height={32} className="w-8 h-8 shrink-0 rounded-lg object-contain" />
+      <img src="/favicon.png" alt="SoundCampaign logo" width={32} height={32} className="w-8 h-8 shrink-0 rounded-lg object-contain" />
       {!compact && (
         <span className="truncate text-sm font-black text-primary-foreground sm:text-base">
           SOUND<span className="text-[var(--nrc-gold)]">CAMPAIGN</span>
@@ -97,7 +97,7 @@ export function AppShell({ title, children, isAdmin }: { title: string; children
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-60 shrink-0 flex-col bg-[var(--nrc-green-dark)] text-primary-foreground">
         <div className="px-5 py-4 flex items-center gap-2 border-b border-white/10">
-          <img src={scMark.url} alt="SoundCampaign logo" width={32} height={32} className="w-8 h-8 shrink-0 rounded-lg object-contain" />
+          <img src="/favicon.png" alt="SoundCampaign logo" width={32} height={32} className="w-8 h-8 shrink-0 rounded-lg object-contain" />
           <span className="font-black tracking-wider">SOUND<span className="text-[var(--nrc-gold)]">CAMPAIGN</span></span>
         </div>
         <div className="px-5 pt-4 pb-2 text-[10px] uppercase tracking-widest opacity-60">{L("Menu")}</div>
