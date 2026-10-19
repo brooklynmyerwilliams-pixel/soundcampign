@@ -1,12 +1,12 @@
 import scMark from "@/assets/sc-mark.png.asset.json";
 import heroSpotify from "@/assets/hero-spotify.png.asset.json";
 import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
-import tiktokPhones from "@/assets/tiktok-phones.png.asset.json";
+import tiktokPhones from "@/assets/tiktok-phones.jpg.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
-import storyTop from "@/assets/story-top.png.asset.json";
+import storyTop from "@/assets/story-top.jpg.asset.json";
 import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
-import creatorsList from "@/assets/creators-list.png.asset.json";
+import creatorsList from "@/assets/creators-list.jpg.asset.json";
 import releasesList from "@/assets/releases-list.png.asset.json";
 import tiktokChart from "@/assets/tiktok-chart.png.asset.json";
 import artistWall from "@/assets/artist-wall.png.asset.json";
@@ -305,7 +305,7 @@ function Landing() {
             src={storyTop.url}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
-            className="block w-full aspect-[768/725] object-cover object-top"
+            className="block w-full"
           />
         </div>
         <div
