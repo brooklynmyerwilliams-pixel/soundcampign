@@ -38,6 +38,10 @@ import brandSoundCampaign from "@/assets/brand-soundcloud.png.asset.json";
 import brandYoutube from "@/assets/brand-youtube.png.asset.json";
 import brandTidal from "@/assets/brand-tidal.png.asset.json";
 import brandDeezer from "@/assets/brand-deezer.png.asset.json";
+import brandSymphonic from "@/assets/brand-symphonic.png.asset.json";
+import brandDitto from "@/assets/brand-ditto.png.asset.json";
+import brandAwal from "@/assets/brand-awal.png.asset.json";
+import brandWarner from "@/assets/brand-warner.png.asset.json";
 
 const TRUSTED_LOGOS: { name: string; src: string }[] = [
   { name: "Spotify", src: brandSpotify.url },
@@ -46,6 +50,10 @@ const TRUSTED_LOGOS: { name: string; src: string }[] = [
   { name: "YouTube Music", src: brandYoutube.url },
   { name: "Tidal", src: brandTidal.url },
   { name: "Deezer", src: brandDeezer.url },
+  { name: "Symphonic", src: brandSymphonic.url },
+  { name: "Ditto", src: brandDitto.url },
+  { name: "AWAL", src: brandAwal.url },
+  { name: "Warner Music Group", src: brandWarner.url },
 ];
 
 
