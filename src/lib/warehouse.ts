@@ -66,9 +66,12 @@ export function tierIndexForLevel(level: number | null | undefined): number {
   return 0;
 }
 
-/** Effective tier never downgrades: it's the best of earned level and current balance. */
-export function stickyTierIndex(balance: number | null | undefined, level: number | null | undefined) {
-  return Math.max(tierIndexForBalance(balance), tierIndexForLevel(level));
+/**
+ * Effective tier = the stored level only. Balance never upgrades a user by itself;
+ * upgrades happen through an admin-approved request or an admin setting the level.
+ */
+export function stickyTierIndex(_balance: number | null | undefined, level: number | null | undefined) {
+  return tierIndexForLevel(level);
 }
 
 export function stickyTier(balance: number | null | undefined, level: number | null | undefined) {
