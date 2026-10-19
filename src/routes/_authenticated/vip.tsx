@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatMoney, MUSIC_PARTNERS, useOnHold } from "@/lib/hooks";
@@ -5,6 +6,7 @@ import { ArrowLeft, Wallet as WalletIcon, Clock, Star, TrendingUp, TrendingDown,
 import { useStickyTier } from "@/lib/tier";
 
 export const Route = createFileRoute("/_authenticated/vip")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Music Promotion — SoundCampaign"},

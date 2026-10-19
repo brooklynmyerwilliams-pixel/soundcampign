@@ -1,9 +1,11 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe } from "@/lib/hooks";
 import { Music2, Users, Globe2, Target } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/about")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "About \u2014 SoundCampaign"},

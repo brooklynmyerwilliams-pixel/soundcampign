@@ -1,3 +1,4 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe, formatMoney } from "@/lib/hooks";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { useStickyTier } from "@/lib/tier";
 
 export const Route = createFileRoute("/_authenticated/profile")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Profile \u2014 SoundCampaign"},

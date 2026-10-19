@@ -1,8 +1,10 @@
+import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useMe } from "@/lib/hooks";
 
 export const Route = createFileRoute("/_authenticated/terms")({
+  beforeLoad: () => requireUserPanel(),
   head: () => ({
     meta: [
       {"title": "Terms and Conditions — SoundCampaign"},
