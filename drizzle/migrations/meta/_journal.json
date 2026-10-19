@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791683523196,
+      "tag": "0000_soundcloud_initial_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791685137900,
+      "tag": "0001_admin_grants_and_reward_kind",
+      "breakpoints": true
+    }
+  ]
+}
