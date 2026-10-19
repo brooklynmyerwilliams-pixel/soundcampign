@@ -92,7 +92,6 @@ const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)
 function applyLandingImageFallback(image: HTMLImageElement) {
   if (image.dataset.fallbackApplied === "true") return;
   image.dataset.fallbackApplied = "true";
-  image.dataset.fallbackApplied = "true";
   const isTrustedLogo = [
     "Spotify",
     "Symphonic",
