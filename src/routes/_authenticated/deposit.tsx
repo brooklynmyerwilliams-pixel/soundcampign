@@ -43,7 +43,7 @@ function DepositPage() {
     ? { ...base, address: override?.address || base.address, network: override?.network || base.network }
     : undefined;
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const userId = me.user.id;
 
   const copyAddress = async () => {

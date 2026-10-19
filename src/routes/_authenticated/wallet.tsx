@@ -45,7 +45,7 @@ function WalletPage() {
     enabled: !!me?.user.id,
     queryFn: async () => (await supabase.from("mock_transactions").select("*").eq("user_id", me!.user.id).order("created_at", { ascending: false }).limit(20)).data ?? [],
   });
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const p = me.profile;
 
   return (

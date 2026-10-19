@@ -45,7 +45,7 @@ function RecordsPage() {
         .eq("kind", "promotion")
         .order("created_at", { ascending: true })).data ?? [],
   });
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
 
   const currentTier = stickyTier(me.profile?.balance, me.profile?.vip_level);
   const currentGroup = TIER_GROUPS.find((g) => g.key === currentTier.key) ?? TIER_GROUPS[0];

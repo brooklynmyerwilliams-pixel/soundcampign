@@ -209,7 +209,7 @@ function PartnerPage() {
   };
 
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   if (!partner) return <Navigate to="/vip" />;
 
   return (

@@ -117,7 +117,7 @@ function CommunityPage() {
     return [...map.values()].sort((a, b) => b.total - a.total).slice(0, 5);
   }, [items]);
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
 
   return (
     <AppShell title="Community" isAdmin={me.isAdmin}>

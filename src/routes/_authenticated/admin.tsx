@@ -80,7 +80,7 @@ function AdminPage() {
   const [chatThreadId, setChatThreadId] = useState<string | null>(null);
 
   if (isLoading) return <div className="p-8 text-center">Loading…</div>;
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   if (!me.isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center p-8 bg-background">

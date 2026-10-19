@@ -27,7 +27,7 @@ function StartingPage() {
   const { data: hold = 0 } = useOnHold(me?.user.id);
 
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const p = me.profile;
 
   return (
