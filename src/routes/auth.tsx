@@ -210,7 +210,7 @@ function AuthPage() {
     <div className="min-h-screen bg-background">
       <TopBar />
       <div className="max-w-lg mx-auto px-4 py-6">
-        <img src="/soundcampaign-music-promotion.jpg" alt="SoundCampaign Music Promotion" width={1200} height={630} className="mb-5 h-auto w-full object-contain" fetchPriority="high" />
+        <img src="/soundcampaign-music-promotion.jpg" onError={(event) => { event.currentTarget.src = "/og-soundcampaign.jpg"; }} alt="SoundCampaign Music Promotion" width={1200} height={630} className="mb-5 h-auto w-full object-contain" fetchPriority="high" />
         <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
           <div className="flex gap-2 mb-5">
             <button onClick={() => setMode("signin")} className={`flex-1 py-2 rounded-md text-sm font-semibold ${mode==="signin"?"bg-[var(--nrc-green)] text-primary-foreground":"bg-muted text-muted-foreground"}`}>{t("auth.signIn")}</button>

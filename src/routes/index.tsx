@@ -239,7 +239,7 @@ function Landing() {
       <header className="sticky top-0 z-40 border-b border-[var(--lp-border)] bg-[var(--lp-bg)]/90 backdrop-blur">
         <div className="mx-auto grid min-h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 md:flex md:justify-between">
           <div className="flex min-w-0 items-center gap-2">
-            <img src={scMark.url} alt="SoundCampaign logo" width={32} height={32} className="h-8 w-8 shrink-0 object-contain" />
+            <img src="/favicon.png" alt="SoundCampaign logo" width={32} height={32} className="h-8 w-8 shrink-0 object-contain" />
             <span className="truncate text-sm font-black sm:text-base">SOUND<span className={green}>CAMPAIGN</span></span>
           </div>
           <nav className="hidden items-center gap-7 text-sm text-[var(--lp-muted)] md:flex">
@@ -607,7 +607,7 @@ function Landing() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <img src={scMark.url} alt="SoundCampaign logo" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
+              <img src="/favicon.png" alt="SoundCampaign logo" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
               <span className="font-black">SOUND<span className={green}>CAMPAIGN</span></span>
             </div>
             <p className="mt-6 flex items-center gap-1.5 text-sm">
