@@ -4,7 +4,7 @@ import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
 import tiktokPhones from "@/assets/tiktok-phones.png.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
 import storyTop from "@/assets/story-top.png.asset.json";
-import worldMap from "@/assets/world-map.png.asset.json";
+import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
 import creatorsList from "@/assets/creators-list.png.asset.json";
 import releasesList from "@/assets/releases-list.png.asset.json";
@@ -307,40 +307,38 @@ function Landing() {
             loading="lazy"
             className="block w-full aspect-[768/725] object-cover object-top"
           />
-          <div
-            id="results"
-            className="relative bg-[#161616] px-4 pb-16 pt-10 text-center"
-          >
-            <img
-              src={worldMap.url}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              className="pointer-events-none absolute inset-x-0 bottom-0 w-full select-none object-cover opacity-90"
-            />
-            <div className="relative">
-              <h2 className="text-2xl font-extrabold md:text-4xl">Our Power in Numbers</h2>
-              <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-4">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <div className="text-xl font-extrabold leading-none md:text-4xl">
-                      <CountUp to={s.to} decimals={s.decimals} suffix={s.suffix} />
-                    </div>
-                    <div className="mt-2 text-[11px] text-white/70 md:text-sm">{s.label}</div>
-                  </div>
-                ))}
+        </div>
+        <div
+          id="results"
+          className="mt-8 overflow-hidden rounded-[28px] bg-[#161616] px-4 pt-12 text-center md:mt-12 md:pt-16"
+        >
+          <h2 className="text-2xl font-extrabold md:text-4xl">Our Power in Numbers</h2>
+          <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-4">
+            {stats.map((s) => (
+              <div key={s.label}>
+                <div className="text-xl font-extrabold leading-none md:text-4xl">
+                  <CountUp to={s.to} decimals={s.decimals} suffix={s.suffix} />
+                </div>
+                <div className="mt-2 text-[11px] text-white/70 md:text-sm">{s.label}</div>
               </div>
-              <div className="mt-8 flex justify-center">
-                <Link
-                  to="/auth"
-                  className="rounded-full bg-[var(--lp-green)] px-9 py-3.5 font-bold text-[var(--lp-green-ink)] shadow-lg shadow-black/30 transition hover:brightness-110"
-                >
-                  Start Now
-                </Link>
-              </div>
-              <div className="h-40 md:h-64" />
-            </div>
+            ))}
           </div>
+          <div className="mt-8 flex justify-center">
+            <Link
+              to="/auth"
+              className="rounded-full bg-[var(--lp-green)] px-9 py-3.5 font-bold text-[var(--lp-green-ink)] shadow-lg shadow-black/30 transition hover:brightness-110"
+            >
+              Start Now
+            </Link>
+          </div>
+          <img
+            src={worldMap.url}
+            alt="Global network of SoundCampaign artists and curators"
+            loading="lazy"
+            width={1536}
+            height={768}
+            className="pointer-events-none mx-auto mt-10 block w-full max-w-5xl select-none md:mt-14"
+          />
         </div>
       </section>
 
