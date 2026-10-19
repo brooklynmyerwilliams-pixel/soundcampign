@@ -1,0 +1,14 @@
+# Roadmap
+
+- [done] Replaced platform branding website-wide with SoundCampaign, including public/member/admin wordmarks, page titles and support copy. Public home and sign-up verified in browser; authenticated pages checked in source (no session available). Third-party SoundCloud partner references retained. Publish required for live changes.
+
+- [done] Published Lovable badge hidden and verified; SoundCampaign music-promotion thumbnail configured for home and sign-up/referral links, verified in browser and server-rendered sharing details. Publish required for the new thumbnail to reach the live domain.
+
+- [done] Pair real accounts left with referred training accounts right; verified creation using a real referral code, paired search and detail access, both account pages, and phone placement. Temporary test account removed and referrer count restored; all six tests pass.
+
+- [done] Restore photos and logos; verified all home and member-page images at phone, tablet, and computer widths with no broken images or horizontal clipping.
+
+- [done] Warehouse price edits sync instantly into Add Exclusive Task dialog — verified live (edited price $777 appeared as Base cost/Cost in the dialog; test data restored to $32).
+- [done] Trending playlist now plays real artist music: 10 seeded songs replaced with real hits (Blinding Lights, Shape of You, Levitating, etc.), each wired to the artist's official 30-second iTunes preview clip and real album art. Verified in browser: titles/artwork render, play button loads the correct clip (headless test browser can't decode AAC, but clip verified as valid 30s audio).
+- [done] Song submission returns cost + profit to balance — verified end-to-end in the browser as demo_user: balance $100.00 → $100.17 after submitting "Essence — Wizkid" (cost $33.00 returned + $0.17 profit), transaction approved with exact c:/p: note, On Hold $0.00.
+- [done] Held (unsubmitted) songs can now be resumed from the partner page — "Submission on hold" banner with Resume Submission reopens the dialog; submitting returns cost + profit to the balance and clears On Hold. Verified in browser: $50.00 hold + $0.25 profit returned, balance $100.17 → $150.42, pending = 0.
