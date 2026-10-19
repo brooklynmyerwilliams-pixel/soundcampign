@@ -19,18 +19,3 @@ export const resolveLoginEmail = createServerFn({ method: "GET" })
     return { email: userData.user.email };
   });
 
-/** Checks that an invitation code belongs to an existing, active account. */
-export const checkInviteCode = createServerFn({ method: "GET" })
-  .inputValidator((data) =>
-    z.object({ code: z.string().trim().min(1).max(20).regex(/^[A-Za-z0-9]+$/) }).parse(data),
-  )
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: prof } = await supabaseAdmin
-      .from("profiles")
-      .select("id, suspended")
-      .eq("invite_code", data.code.toUpperCase())
-      .limit(1)
-      .maybeSingle();
-    return { valid: !!prof && !prof.suspended };
-  });
