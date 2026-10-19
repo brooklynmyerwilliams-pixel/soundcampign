@@ -248,12 +248,12 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-4 py-10 md:grid-cols-2 md:py-20">
+      <section className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-4 py-10 sm:px-6 md:grid-cols-2 md:gap-10 md:py-16 lg:py-20">
         <div className="min-w-0">
-          <h1 className="text-4xl font-extrabold leading-[1.05] md:text-6xl">
+          <h1 className="text-[clamp(2rem,5.2vw,3.75rem)] font-extrabold leading-[1.05] tracking-tight">
             Music promotion with <span className={green}>proven</span> results.
           </h1>
-          <p className="mt-3 max-w-md text-sm text-[var(--lp-muted)] md:mt-6 md:text-base">
+          <p className="mt-3 max-w-md text-sm text-[var(--lp-muted)] md:mt-6 md:text-base lg:text-lg">
             SoundCampaign is the easiest way for musicians to promote their music with real
             placements, and honest curator feedback.
           </p>
@@ -269,7 +269,7 @@ function Landing() {
             </a>
           </div>
           <div className="mt-5 md:mt-10">
-            <img src={heroAvatars.url} alt="Artists on SoundCampaign" className="h-5 w-auto object-contain md:h-9" />
+            <img src={heroAvatars.url} alt="Artists on SoundCampaign" className="h-8 w-auto object-contain md:h-10" />
             <span className="mt-2 block text-xs text-[var(--lp-muted)] md:text-sm">Trusted by artists &amp; labels</span>
           </div>
         </div>
@@ -284,14 +284,14 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-80">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-6 sm:gap-x-10 opacity-80">
           {TRUSTED_LOGOS.map((l) => (
             <img
               key={l.name}
               src={l.src}
               alt={l.name}
               loading="lazy"
-              className="h-7 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
+              className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
             />
           ))}
         </div>
