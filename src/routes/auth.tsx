@@ -164,8 +164,7 @@ function AuthPage() {
     setErrors({});
     setLoading(true);
     try {
-      let inviteOk = false;
-      try { inviteOk = (await checkInvite({ data: { code: inviteCode.trim() } })).valid; } catch { inviteOk = false; }
+      const inviteOk = (await checkInvite({ data: { code: inviteCode.trim() } })).valid;
       if (!inviteOk) {
         setErrors({ inviteCode: "Invalid invitation code" });
         return;
