@@ -437,7 +437,7 @@ function Landing() {
           src={releasesList.url}
           alt="Campaign releases with days left and details"
           loading="lazy"
-          className="w-full"
+          className="mx-auto w-full max-w-md rounded-2xl"
         />
 
       </section>
