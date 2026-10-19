@@ -305,7 +305,7 @@ function Landing() {
             src={storyTop.url}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
-            className="block w-full aspect-[768/755] object-cover object-top"
+            className="block w-full aspect-[768/725] object-cover object-top"
           />
           <div
             id="results"
