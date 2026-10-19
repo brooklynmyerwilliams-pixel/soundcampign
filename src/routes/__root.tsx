@@ -89,6 +89,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Promote your music with real curators and creators." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "SoundCampaign" },
+      { name: "application-name", content: "SoundCampaign" },
+      { name: "apple-mobile-web-app-title", content: "SoundCampaign" },
+      { name: "theme-color", content: "#0a0a0a" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -97,6 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,
