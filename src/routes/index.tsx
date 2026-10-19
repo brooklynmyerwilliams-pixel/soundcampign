@@ -1,12 +1,12 @@
 import scMark from "@/assets/sc-mark.png.asset.json";
 import heroSpotify from "@/assets/hero-spotify.png.asset.json";
 import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
-import tiktokPhones from "@/assets/tiktok-phones.png.asset.json";
+import tiktokPhones from "@/assets/tiktok-phones.jpg.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
-import storyTop from "@/assets/story-top.png.asset.json";
+import storyTop from "@/assets/story-top.jpg.asset.json";
 import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
-import creatorsList from "@/assets/creators-list.png.asset.json";
+import creatorsList from "@/assets/creators-list.jpg.asset.json";
 import releasesList from "@/assets/releases-list.png.asset.json";
 import tiktokChart from "@/assets/tiktok-chart.png.asset.json";
 import artistWall from "@/assets/artist-wall.png.asset.json";
@@ -305,7 +305,7 @@ function Landing() {
             src={storyTop.url}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
-            className="block w-full aspect-[768/725] object-cover object-top"
+            className="block w-full"
           />
         </div>
         <div
@@ -371,7 +371,7 @@ function Landing() {
             src={tiktokPhones.url}
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
-            className="pointer-events-none mx-auto -mt-4 w-[78%] max-w-[420px] select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[440px] lg:w-[42%] lg:-translate-y-1/2"
+            className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
           />
         </div>
       </section>
@@ -383,7 +383,7 @@ function Landing() {
           src={creatorsList.url}
           alt="TikTok creators with follower and like counts"
           loading="lazy"
-          className="w-full"
+          className="mx-auto w-full max-w-md rounded-2xl"
         />
 
         <div>
