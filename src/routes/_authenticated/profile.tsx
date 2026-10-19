@@ -33,7 +33,7 @@ function ProfilePage() {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const tier = useStickyTier(me?.user.id, me?.profile?.balance, me?.profile?.vip_level, (me?.profile as any)?.level_locked);
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const p = me.profile;
 
   async function signOut() {

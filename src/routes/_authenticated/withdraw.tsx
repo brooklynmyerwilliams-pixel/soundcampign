@@ -45,7 +45,7 @@ function WithdrawPage() {
       (await supabase.from("user_wallets").select("*").eq("user_id", userId!).order("created_at", { ascending: false })).data ?? [],
   });
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const balance = Number(me.profile?.balance ?? 0);
   const assetWallets = wallets.filter((w) => !asset || w.asset === asset);
 

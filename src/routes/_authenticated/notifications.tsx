@@ -36,7 +36,7 @@ const SEED: N[] = [
 function NotificationsPage() {
   const { data: me } = useMe();
   const [items, setItems] = useState(SEED);
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const unread = items.filter((i) => i.unread).length;
 
   return (

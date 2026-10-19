@@ -59,7 +59,7 @@ function TierRecordsPage() {
     });
   }, [userId, balance, hasPending, qc]);
 
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
 
   const currentTier = stickyTier(me.profile?.balance, me.profile?.vip_level);
   const tierKeyOf = (note: string | null) => {

@@ -49,7 +49,7 @@ function Dashboard() {
   const [supportOpen, setSupportOpen] = useState(false);
   const tier = useStickyTier(me?.user.id, me?.profile?.balance, me?.profile?.vip_level, (me?.profile as any)?.level_locked);
   if (isLoading) return <div className="p-8 text-center">Loading…</div>;
-  if (!me) return <Navigate to="/auth" />;
+  if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const p = me.profile;
 
   return (
