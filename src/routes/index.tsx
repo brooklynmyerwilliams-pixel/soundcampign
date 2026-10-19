@@ -272,9 +272,8 @@ function Landing() {
               Learn more <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
             </a>
           </div>
-          <div className="mt-5 md:mt-10">
-            <img src={heroAvatars.url} alt="Artists on SoundCampaign" className="h-8 w-auto object-contain md:h-10" />
-            <span className="mt-2 block text-xs text-[var(--lp-muted)] md:text-sm">Trusted by artists &amp; labels</span>
+          <div className="mt-6 md:mt-10">
+            <img src="/trusted-artists.png" alt="Rated Excellent — trusted by 100,000+ artists & labels" width={322} height={34} className="h-8 w-auto max-w-full object-contain object-left md:h-[34px]" />
           </div>
         </div>
 
@@ -283,7 +282,16 @@ function Landing() {
         </div>
       </section>
 
-
+      {/* Reviews & stats strip */}
+      <section className="mx-auto max-w-6xl px-4">
+        <div className="flex justify-center border-y border-[var(--lp-border)] py-5">
+          <div className="flex flex-col items-center gap-4 lg:flex-row lg:gap-8">
+            <img src="/tp-reviews.png" alt="Excellent — based on 2,264 reviews on Trustpilot" width={424} height={20} className="h-auto w-full max-w-[424px] object-contain" />
+            <span aria-hidden className="hidden h-6 w-px bg-[var(--lp-border)] lg:block" />
+            <img src="/tp-stats.png" alt="500,000+ campaigns run · 1B+ streams generated" width={348} height={14} className="h-auto w-[90%] max-w-[348px] object-contain" />
+          </div>
+        </div>
+      </section>
 
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
