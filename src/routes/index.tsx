@@ -288,7 +288,7 @@ function Landing() {
           <div className="flex flex-col items-center gap-4 lg:flex-row lg:gap-8">
             <img src="/tp-reviews.png" alt="Excellent — based on 2,264 reviews on Trustpilot" width={424} height={20} className="h-auto w-full max-w-[424px] object-contain" />
             <span aria-hidden className="hidden h-6 w-px bg-[var(--lp-border)] lg:block" />
-            <img src="/tp-stats.png" alt="500,000+ campaigns run · 1B+ streams generated" width={348} height={20} className="h-auto w-[90%] max-w-[348px] object-contain" />
+            <img src="/tp-stats.png" alt="500,000+ campaigns run · 1B+ streams generated" width={348} height={14} className="h-auto w-[90%] max-w-[348px] object-contain" />
           </div>
         </div>
       </section>
