@@ -284,14 +284,14 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-6 sm:gap-x-10 opacity-80">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-6 sm:gap-x-10 opacity-80">
           {TRUSTED_LOGOS.map((l) => (
             <img
               key={l.name}
               src={l.src}
               alt={l.name}
               loading="lazy"
-              className="h-7 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
+              className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
             />
           ))}
         </div>
