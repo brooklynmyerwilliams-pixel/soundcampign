@@ -44,16 +44,16 @@ import brandAwal from "@/assets/brand-awal.png.asset.json";
 import brandWarner from "@/assets/brand-warner.png.asset.json";
 
 const TRUSTED_LOGOS: { name: string; src: string }[] = [
-  { name: "Spotify", src: brandSpotify.url },
-  { name: "Symphonic", src: brandSymphonic.url },
-  { name: "Apple Music", src: brandApple.url },
-  { name: "Ditto", src: brandDitto.url },
-  { name: "SoundCloud", src: brandSoundCampaign.url },
-  { name: "AWAL", src: brandAwal.url },
-  { name: "YouTube Music", src: brandYoutube.url },
-  { name: "Warner Music Group", src: brandWarner.url },
-  { name: "Tidal", src: brandTidal.url },
-  { name: "Deezer", src: brandDeezer.url },
+  { name: "Spotify", src: "/favicon.png" },
+  { name: "Symphonic", src: "/favicon.png" },
+  { name: "Apple Music", src: "/favicon.png" },
+  { name: "Ditto", src: "/favicon.png" },
+  { name: "SoundCloud", src: "/favicon.png" },
+  { name: "AWAL", src: "/favicon.png" },
+  { name: "YouTube Music", src: "/favicon.png" },
+  { name: "Warner Music Group", src: "/favicon.png" },
+  { name: "Tidal", src: "/favicon.png" },
+  { name: "Deezer", src: "/favicon.png" },
 ];
 
 
@@ -90,38 +90,32 @@ const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
 
 const landingImageFallbacks: Record<string, string> = {
-  "Global network of SoundCampaign artists and curators":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-jVaQNXWxR87eWKIKkKwsMK4TRKJltf.png",
-  "TikTok campaign video views chart up 89%":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-6zad1NQjRyGlq8HSp9UNYzGZxyWt35.png",
-  "Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9B69UVRj9zYr7lPB9NMmBAupmLNqiw.png",
-  "TikTok creators with follower and like counts":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-SLtN8R6VO9rPKsSv1zVGF0ODVN3L7b.png",
-  "TikTok videos featuring artists promoting music":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-yhpEPL4ZM7tv6byYkL4sYhvxqUSXPY.png",
-  "Campaign releases with days left and details":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9B69UVRj9zYr7lPB9NMmBAupmLNqiw.png",
-  "We've helped over 100,000 artists be heard":
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-mWDL9P1GtTbEnsUWZMUcnWEvOWwlcs.png",
+  "Global network of SoundCampaign artists and curators": "/og-soundcampaign.jpg",
+  "TikTok campaign video views chart up 89%": "/soundcampaign-music-promotion.jpg",
+  "Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed": "/soundcampaign-music-promotion.jpg",
+  "TikTok creators with follower and like counts": "/soundcampaign-music-promotion.jpg",
+  "TikTok videos featuring artists promoting music": "/soundcampaign-music-promotion.jpg",
+  "Campaign releases with days left and details": "/soundcampaign-music-promotion.jpg",
+  "We've helped over 100,000 artists be heard": "/og-soundcampaign.jpg",
 };
+
+const trustedLogoNames = new Set([
+  "Spotify",
+  "Symphonic",
+  "Apple Music",
+  "Ditto",
+  "SoundCloud",
+  "AWAL",
+  "YouTube Music",
+  "Warner Music Group",
+  "Tidal",
+  "Deezer",
+]);
 
 function applyLandingImageFallback(image: HTMLImageElement) {
   if (image.dataset.fallbackApplied === "true") return;
   image.dataset.fallbackApplied = "true";
-  const isTrustedLogo = [
-    "Spotify",
-    "Symphonic",
-    "Apple Music",
-    "Ditto",
-    "SoundCloud",
-    "AWAL",
-    "YouTube Music",
-    "Warner Music Group",
-    "Tidal",
-    "Deezer",
-  ].includes(image.alt);
-  image.src = landingImageFallbacks[image.alt] ?? (isTrustedLogo ? "/favicon.png" : "/og-soundcampaign.jpg");
+  image.src = landingImageFallbacks[image.alt] ?? (trustedLogoNames.has(image.alt) ? "/favicon.png" : "/og-soundcampaign.jpg");
 }
 
 function handleLandingImageError(event: React.SyntheticEvent<HTMLImageElement>) {
@@ -145,7 +139,7 @@ const tiktokPoints = [
 const testimonials = [
   {
     name: "Tyrone",
-    avatar: avatarTyrone.url as string | undefined,
+    avatar: "/favicon.png",
     stars: 5,
     role: "Rapper",
     quote:
@@ -153,7 +147,7 @@ const testimonials = [
   },
   {
     name: "Santiago",
-    avatar: avatarSantiago.url as string | undefined,
+    avatar: "/favicon.png",
     stars: 5,
     role: "Singer & Music Producer / Reached over 500K streams on Spotify",
     quote:
@@ -161,7 +155,7 @@ const testimonials = [
   },
   {
     name: "Stefan",
-    avatar: avatarStefan.url as string | undefined,
+    avatar: "/favicon.png",
     stars: 4,
     role: "DJ & Music Producer",
     quote:
@@ -169,7 +163,7 @@ const testimonials = [
   },
   {
     name: "Joseph",
-    avatar: avatarJoseph.url as string | undefined,
+    avatar: "/favicon.png",
     stars: 5,
     role: "Singer / Reached over 350K streams on Spotify",
     quote:
@@ -177,7 +171,7 @@ const testimonials = [
   },
   {
     name: "Richard",
-    avatar: avatarRichard.url as string | undefined,
+    avatar: "/favicon.png",
     stars: 5,
     role: "Singer",
     quote:
@@ -332,7 +326,7 @@ function Landing() {
         </div>
 
         <div className="min-w-0">
-          <img src="/soundcampaign-music-promotion.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" onError={handleLandingImageError}
+          <img src="/og-soundcampaign.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" onError={handleLandingImageError}
                     onLoad={handleLandingImageLoad} />
         </div>
       </section>
@@ -370,7 +364,7 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src={storyTop.url}
+            src="/og-soundcampaign.jpg"
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
                     onError={handleLandingImageError}
@@ -402,7 +396,7 @@ function Landing() {
             </Link>
           </div>
           <img
-            src={worldMap.url}
+            src="/og-soundcampaign.jpg"
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
                     onError={handleLandingImageError}
@@ -440,7 +434,7 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src={tiktokPhones.url}
+            src="/og-soundcampaign.jpg"
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
                     onError={handleLandingImageError}
@@ -454,7 +448,7 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={creatorsList.url}
+          src="/og-soundcampaign.jpg"
           alt="TikTok creators with follower and like counts"
           loading="lazy"
                     onError={handleLandingImageError}
@@ -510,7 +504,7 @@ function Landing() {
           </p>
         </div>
         <img
-          src={releasesList.url}
+          src="/og-soundcampaign.jpg"
           alt="Campaign releases with days left and details"
           loading="lazy"
                     onError={handleLandingImageError}
@@ -523,7 +517,7 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={tiktokChart.url}
+          src="/og-soundcampaign.jpg"
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
                     onError={handleLandingImageError}
@@ -552,7 +546,7 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src={artistWall.url}
+          src="/og-soundcampaign.jpg"
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
                     onError={handleLandingImageError}
