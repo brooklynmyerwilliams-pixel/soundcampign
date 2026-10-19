@@ -89,6 +89,23 @@ export const Route = createFileRoute("/")({
 const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
 
+const landingImageFallbacks: Record<string, string> = {
+  "Global network of SoundCampaign artists and curators":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-jVaQNXWxR87eWKIKkKwsMK4TRKJltf.png",
+  "TikTok campaign video views chart up 89%":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-6zad1NQjRyGlq8HSp9UNYzGZxyWt35.png",
+  "Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9B69UVRj9zYr7lPB9NMmBAupmLNqiw.png",
+  "TikTok creators with follower and like counts":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-SLtN8R6VO9rPKsSv1zVGF0ODVN3L7b.png",
+  "TikTok videos featuring artists promoting music":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-yhpEPL4ZM7tv6byYkL4sYhvxqUSXPY.png",
+  "Campaign releases with days left and details":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9B69UVRj9zYr7lPB9NMmBAupmLNqiw.png",
+  "We've helped over 100,000 artists be heard":
+    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-mWDL9P1GtTbEnsUWZMUcnWEvOWwlcs.png",
+};
+
 function applyLandingImageFallback(image: HTMLImageElement) {
   if (image.dataset.fallbackApplied === "true") return;
   image.dataset.fallbackApplied = "true";
@@ -104,7 +121,7 @@ function applyLandingImageFallback(image: HTMLImageElement) {
     "Tidal",
     "Deezer",
   ].includes(image.alt);
-  image.src = isTrustedLogo ? "/favicon.png" : "/og-soundcampaign.jpg";
+  image.src = landingImageFallbacks[image.alt] ?? (isTrustedLogo ? "/favicon.png" : "/og-soundcampaign.jpg");
 }
 
 function handleLandingImageError(event: React.SyntheticEvent<HTMLImageElement>) {
