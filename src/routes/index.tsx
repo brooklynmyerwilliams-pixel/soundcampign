@@ -89,6 +89,35 @@ export const Route = createFileRoute("/")({
 const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
 
+function applyLandingImageFallback(image: HTMLImageElement) {
+  if (image.dataset.fallbackApplied === "true") return;
+  image.dataset.fallbackApplied = "true";
+  image.dataset.fallbackApplied = "true";
+  const isTrustedLogo = [
+    "Spotify",
+    "Symphonic",
+    "Apple Music",
+    "Ditto",
+    "SoundCloud",
+    "AWAL",
+    "YouTube Music",
+    "Warner Music Group",
+    "Tidal",
+    "Deezer",
+  ].includes(image.alt);
+  image.src = isTrustedLogo ? "/favicon.png" : "/og-soundcampaign.jpg";
+}
+
+function handleLandingImageError(event: React.SyntheticEvent<HTMLImageElement>) {
+  applyLandingImageFallback(event.currentTarget);
+}
+
+function handleLandingImageLoad(event: React.SyntheticEvent<HTMLImageElement>) {
+  if (event.currentTarget.naturalWidth === 0) {
+    applyLandingImageFallback(event.currentTarget);
+  }
+}
+
 const tiktokPoints = [
   "Creators use your music in their videos",
   "Grow your global audience in just days",
@@ -281,12 +310,14 @@ function Landing() {
             </a>
           </div>
           <div className="mt-6 md:mt-10">
-            <img src="/trusted-artists.png" alt="Rated Excellent — trusted by 100,000+ artists & labels" width={322} height={34} className="h-8 w-auto max-w-full object-contain object-left md:h-[34px]" />
+            <img src="/trusted-artists.png" alt="Rated Excellent — trusted by 100,000+ artists & labels" width={322} height={34} className="h-8 w-auto max-w-full object-contain object-left md:h-[34px]" onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad} />
           </div>
         </div>
 
         <div className="min-w-0">
-          <img src="/soundcampaign-music-promotion.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" />
+          <img src="/soundcampaign-music-promotion.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad} />
         </div>
       </section>
 
@@ -310,6 +341,8 @@ function Landing() {
               src={l.src}
               alt={l.name}
               loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
               className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
             />
           ))}
@@ -324,6 +357,8 @@ function Landing() {
             src={storyTop.url}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
             className="block w-full"
           />
         </div>
@@ -354,6 +389,8 @@ function Landing() {
             src={worldMap.url}
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
             width={1536}
             height={768}
             className="pointer-events-none mx-auto mt-10 block w-full max-w-5xl select-none md:mt-14"
@@ -390,6 +427,8 @@ function Landing() {
             src={tiktokPhones.url}
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
           />
         </div>
@@ -402,6 +441,8 @@ function Landing() {
           src={creatorsList.url}
           alt="TikTok creators with follower and like counts"
           loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
           className="mx-auto w-full max-w-md rounded-2xl"
         />
 
@@ -456,6 +497,8 @@ function Landing() {
           src={releasesList.url}
           alt="Campaign releases with days left and details"
           loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
           className="mx-auto w-full max-w-md rounded-2xl"
         />
 
@@ -467,6 +510,8 @@ function Landing() {
           src={tiktokChart.url}
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
           className="w-full rounded-2xl"
         />
 
@@ -494,6 +539,8 @@ function Landing() {
           src={artistWall.url}
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
           className="w-full"
         />
       </section>
@@ -513,6 +560,8 @@ function Landing() {
                     src={t.avatar}
                     alt={`${t.name}, ${t.role}`}
                     loading="lazy"
+                    onError={handleLandingImageError}
+                    onLoad={handleLandingImageLoad}
                     className="h-12 w-12 shrink-0 rounded-full object-cover"
                   />
                 ) : (
