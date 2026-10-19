@@ -45,15 +45,15 @@ import brandWarner from "@/assets/brand-warner.png.asset.json";
 
 const TRUSTED_LOGOS: { name: string; src: string }[] = [
   { name: "Spotify", src: brandSpotify.url },
+  { name: "Symphonic", src: brandSymphonic.url },
   { name: "Apple Music", src: brandApple.url },
+  { name: "Ditto", src: brandDitto.url },
   { name: "SoundCloud", src: brandSoundCampaign.url },
+  { name: "AWAL", src: brandAwal.url },
   { name: "YouTube Music", src: brandYoutube.url },
+  { name: "Warner Music Group", src: brandWarner.url },
   { name: "Tidal", src: brandTidal.url },
   { name: "Deezer", src: brandDeezer.url },
-  { name: "Symphonic", src: brandSymphonic.url },
-  { name: "Ditto", src: brandDitto.url },
-  { name: "AWAL", src: brandAwal.url },
-  { name: "Warner Music Group", src: brandWarner.url },
 ];
 
 
