@@ -11,7 +11,8 @@ import { CountrySelect } from "@/components/CountrySelect";
 import { Loader2, User, Mail, Lock, Phone, KeyRound, Eye, EyeOff, Ticket } from "lucide-react";
 import { z } from "zod";
 import { WELCOME_BONUS_KEY } from "@/components/WelcomeBonus";
-import { soundCampaignImageMeta } from "@/lib/social-sharing";
+import { shareImageMeta } from "@/lib/social-sharing";
+import { getRequestOrigin } from "@/lib/origin.functions";
 
 
 /** Blocks suspended accounts: signs them straight back out. */
@@ -26,7 +27,8 @@ async function assertNotSuspended() {
 }
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({
+  loader: () => getRequestOrigin(),
+  head: ({ loaderData }) => ({
     meta: [
       { title: "Sign up — SoundCampaign Music Promotion" },
       { name: "description", content: "Create your SoundCampaign account: name, phone, password, withdrawal PIN and invitation code." },
@@ -34,10 +36,12 @@ export const Route = createFileRoute("/auth")({
       { property: "og:description", content: "Create your SoundCampaign account to start promoting music." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://soundscampaign.com/auth" },
-      ...soundCampaignImageMeta,
+      { property: "og:url", content: `${loaderData ?? ""}/auth` },
+      ...shareImageMeta(loaderData),
+      { name: "twitter:title", content: "SoundCampaign — Music Promotion" },
+      { name: "twitter:description", content: "Real playlist placements, TikTok creator campaigns and honest curator feedback for artists." },
     ],
-    links: [{ rel: "canonical", href: "https://soundscampaign.com/auth" }],
+    links: [{ rel: "canonical", href: `${loaderData ?? ""}/auth` }],
   }),
   component: AuthPage,
 });
