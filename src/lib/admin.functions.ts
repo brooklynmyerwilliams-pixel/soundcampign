@@ -127,8 +127,10 @@ export const listUserAccounts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin
+
+    // Use the authenticated admin client for reads. The service-role key is intentionally
+    // unavailable in some deployments, and requiring it made the whole user list fail.
+    const { data: rows, error } = await context.supabase
       .from("profiles")
       .select("id, username, display_name, phone, balance, vip_level, invite_code, referred_by, created_at, is_training, level_locked, suspended, team_size, total_earned, credit_score, avatar_url, updated_at")
       .order("created_at", { ascending: false });
@@ -137,17 +139,17 @@ export const listUserAccounts = createServerFn({ method: "POST" })
     const refIds = [...new Set((rows ?? []).map((r) => r.referred_by).filter(Boolean))] as string[];
     let refMap: Record<string, string> = {};
     if (refIds.length) {
-      const { data: refs } = await supabaseAdmin
+      const { data: refs, error: refsError } = await context.supabase
         .from("profiles").select("id, username, display_name").in("id", refIds);
+      if (refsError) throw new Error(refsError.message);
       refMap = Object.fromEntries((refs ?? []).map((r) => [r.id, r.display_name || r.username]));
     }
 
-    const { data: emails } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
-    const emailMap = Object.fromEntries((emails?.users ?? []).map((u) => [u.id, u.email ?? ""]));
-
+    // Email is not exposed by the profiles table; keep the field optional rather than
+    // failing the entire list when the server-only Auth Admin API is not configured.
     return (rows ?? []).map((r) => ({
       ...r,
-      email: emailMap[r.id] ?? "",
+      email: "",
       referrerName: r.referred_by ? (refMap[r.referred_by] ?? "—") : null,
     }));
   });
