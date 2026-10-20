@@ -26,19 +26,6 @@ const stats: { to: number; decimals?: number; suffix: string; label: string }[] 
 
 import { ArrowRight, Check, X, ChevronDown, Heart } from "lucide-react";
 
-const TRUSTED_LOGOS = [
-  "Spotify",
-  "Symphonic",
-  "Apple Music",
-  "Ditto",
-  "SoundCloud",
-  "AWAL",
-  "YouTube Music",
-  "Warner Music Group",
-  "Tidal",
-  "Deezer",
-];
-
 
 
 export const Route = createFileRoute("/")({
@@ -291,17 +278,14 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-6 sm:gap-x-10 opacity-80">
-          {TRUSTED_LOGOS.map((name) => (
-            <div
-              key={name}
-              role="img"
-              aria-label={name}
-              className="flex h-9 min-w-[110px] items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] px-3 text-center text-sm font-semibold text-white/80 sm:min-w-[135px] sm:text-base"
-            >
-              {name}
-            </div>
-          ))}
+        <div className="mt-8 overflow-hidden rounded-sm bg-black">
+          <img
+            src="/trusted-industry-logos.png"
+            alt="Spotify, Symphonic, Apple Music, Ditto, SoundCloud, AWAL, YouTube Music, Warner Music Group, Tidal and Deezer"
+            width={1050}
+            height={118}
+            className="mx-auto block h-auto w-full max-w-[1050px]"
+          />
         </div>
       </section>
 
@@ -310,9 +294,8 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src="/og-soundcampaign.jpg"
-            onError={handleImageError}
-            alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
+            src="/olivia-rose-playlist.png"
+            alt="Olivia Rose playlist promotion featuring girls like you by Olivia Rodrigo"
             loading="lazy"
             className="block w-full"
           />
