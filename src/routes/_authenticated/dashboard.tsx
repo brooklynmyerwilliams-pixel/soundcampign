@@ -110,7 +110,7 @@ function Dashboard() {
         {[
           { icon: Headphones, label: "Services", onClick: () => setSupportOpen(true) },
           { icon: Users, label: "Community", to: "/community" as const },
-          { icon: Activity, label: "Activities", to: "/activities" as const },
+          { icon: Activity, label: "Salary", to: "/activities" as const },
           { icon: ShieldCheck, label: "Certificate", to: "/certificate" as const },
           { icon: Info, label: "About", to: "/about" as const },
           { icon: FileText, label: "T&C", to: "/terms" as const },
