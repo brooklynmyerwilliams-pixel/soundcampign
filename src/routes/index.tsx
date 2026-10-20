@@ -89,45 +89,6 @@ export const Route = createFileRoute("/")({
 const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
 
-const landingImageFallbacks: Record<string, string> = {
-  "Global network of SoundCampaign artists and curators": "/og-soundcampaign.jpg",
-  "TikTok campaign video views chart up 89%": "/soundcampaign-music-promotion.jpg",
-  "Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed": "/soundcampaign-music-promotion.jpg",
-  "TikTok creators with follower and like counts": "/soundcampaign-music-promotion.jpg",
-  "TikTok videos featuring artists promoting music": "/soundcampaign-music-promotion.jpg",
-  "Campaign releases with days left and details": "/soundcampaign-music-promotion.jpg",
-  "We've helped over 100,000 artists be heard": "/og-soundcampaign.jpg",
-};
-
-const trustedLogoNames = new Set([
-  "Spotify",
-  "Symphonic",
-  "Apple Music",
-  "Ditto",
-  "SoundCloud",
-  "AWAL",
-  "YouTube Music",
-  "Warner Music Group",
-  "Tidal",
-  "Deezer",
-]);
-
-function applyLandingImageFallback(image: HTMLImageElement) {
-  if (image.dataset.fallbackApplied === "true") return;
-  image.dataset.fallbackApplied = "true";
-  image.src = landingImageFallbacks[image.alt] ?? (trustedLogoNames.has(image.alt) ? "/favicon.png" : "/og-soundcampaign.jpg");
-}
-
-function handleLandingImageError(event: React.SyntheticEvent<HTMLImageElement>) {
-  applyLandingImageFallback(event.currentTarget);
-}
-
-function handleLandingImageLoad(event: React.SyntheticEvent<HTMLImageElement>) {
-  if (event.currentTarget.naturalWidth === 0) {
-    applyLandingImageFallback(event.currentTarget);
-  }
-}
-
 const tiktokPoints = [
   "Creators use your music in their videos",
   "Grow your global audience in just days",
@@ -139,7 +100,7 @@ const tiktokPoints = [
 const testimonials = [
   {
     name: "Tyrone",
-    avatar: "/favicon.png",
+    avatar: avatarTyrone.url as string | undefined,
     stars: 5,
     role: "Rapper",
     quote:
@@ -147,7 +108,7 @@ const testimonials = [
   },
   {
     name: "Santiago",
-    avatar: "/favicon.png",
+    avatar: avatarSantiago.url as string | undefined,
     stars: 5,
     role: "Singer & Music Producer / Reached over 500K streams on Spotify",
     quote:
@@ -155,7 +116,7 @@ const testimonials = [
   },
   {
     name: "Stefan",
-    avatar: "/favicon.png",
+    avatar: avatarStefan.url as string | undefined,
     stars: 4,
     role: "DJ & Music Producer",
     quote:
@@ -163,7 +124,7 @@ const testimonials = [
   },
   {
     name: "Joseph",
-    avatar: "/favicon.png",
+    avatar: avatarJoseph.url as string | undefined,
     stars: 5,
     role: "Singer / Reached over 350K streams on Spotify",
     quote:
@@ -171,7 +132,7 @@ const testimonials = [
   },
   {
     name: "Richard",
-    avatar: "/favicon.png",
+    avatar: avatarRichard.url as string | undefined,
     stars: 5,
     role: "Singer",
     quote:
@@ -278,7 +239,7 @@ function Landing() {
       <header className="sticky top-0 z-40 border-b border-[var(--lp-border)] bg-[var(--lp-bg)]/90 backdrop-blur">
         <div className="mx-auto grid min-h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 md:flex md:justify-between">
           <div className="flex min-w-0 items-center gap-2">
-            <img src="/favicon.png" alt="SoundCampaign logo" width={32} height={32} className="h-8 w-8 shrink-0 object-contain" />
+            <img src={scMark.url} alt="SoundCampaign logo" width={32} height={32} className="h-8 w-8 shrink-0 object-contain" />
             <span className="truncate text-sm font-black sm:text-base">SOUND<span className={green}>CAMPAIGN</span></span>
           </div>
           <nav className="hidden items-center gap-7 text-sm text-[var(--lp-muted)] md:flex">
@@ -320,14 +281,12 @@ function Landing() {
             </a>
           </div>
           <div className="mt-6 md:mt-10">
-            <img src="/trusted-artists.png" alt="Rated Excellent — trusted by 100,000+ artists & labels" width={322} height={34} className="h-8 w-auto max-w-full object-contain object-left md:h-[34px]" onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad} />
+            <img src="/trusted-artists.png" alt="Rated Excellent — trusted by 100,000+ artists & labels" width={322} height={34} className="h-8 w-auto max-w-full object-contain object-left md:h-[34px]" />
           </div>
         </div>
 
         <div className="min-w-0">
-          <img src="/og-soundcampaign.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad} />
+          <img src="/soundcampaign-music-promotion.jpg" alt="SoundCampaign Music Promotion — studio headphones and microphone" width={1200} height={630} className="h-auto w-full object-contain" fetchPriority="high" />
         </div>
       </section>
 
@@ -351,8 +310,6 @@ function Landing() {
               src={l.src}
               alt={l.name}
               loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
               className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
             />
           ))}
@@ -364,11 +321,9 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src="/og-soundcampaign.jpg"
+            src={storyTop.url}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
             className="block w-full"
           />
         </div>
@@ -396,11 +351,9 @@ function Landing() {
             </Link>
           </div>
           <img
-            src="/og-soundcampaign.jpg"
+            src={worldMap.url}
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
             width={1536}
             height={768}
             className="pointer-events-none mx-auto mt-10 block w-full max-w-5xl select-none md:mt-14"
@@ -434,11 +387,9 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src="/og-soundcampaign.jpg"
+            src={tiktokPhones.url}
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
           />
         </div>
@@ -448,11 +399,9 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src="/og-soundcampaign.jpg"
+          src={creatorsList.url}
           alt="TikTok creators with follower and like counts"
           loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
           className="mx-auto w-full max-w-md rounded-2xl"
         />
 
@@ -504,11 +453,9 @@ function Landing() {
           </p>
         </div>
         <img
-          src="/og-soundcampaign.jpg"
+          src={releasesList.url}
           alt="Campaign releases with days left and details"
           loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
           className="mx-auto w-full max-w-md rounded-2xl"
         />
 
@@ -517,11 +464,9 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src="/og-soundcampaign.jpg"
+          src={tiktokChart.url}
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
           className="w-full rounded-2xl"
         />
 
@@ -546,11 +491,9 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src="/og-soundcampaign.jpg"
+          src={artistWall.url}
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
           className="w-full"
         />
       </section>
@@ -570,8 +513,6 @@ function Landing() {
                     src={t.avatar}
                     alt={`${t.name}, ${t.role}`}
                     loading="lazy"
-                    onError={handleLandingImageError}
-                    onLoad={handleLandingImageLoad}
                     className="h-12 w-12 shrink-0 rounded-full object-cover"
                   />
                 ) : (
@@ -666,7 +607,7 @@ function Landing() {
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-3">
           <div>
             <div className="flex items-center gap-2">
-              <img src="/favicon.png" alt="SoundCampaign logo" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
+              <img src={scMark.url} alt="SoundCampaign logo" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
               <span className="font-black">SOUND<span className={green}>CAMPAIGN</span></span>
             </div>
             <p className="mt-6 flex items-center gap-1.5 text-sm">
