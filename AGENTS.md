@@ -14,3 +14,4 @@
 - Derive displayed membership counts from WAREHOUSE_TIERS rather than legacy vip_plans rows, so overview totals match the membership selector without changing stored user ranks.
 - Build public share-image, og:url and canonical URLs from the request origin (getRequestOrigin loader + shareImageMeta), serving the branded JPEG from public, so previews work on whatever domain the site is published to.
 - Gate every _authenticated page with the role-guard helpers (requireAdminPanel / requireUserPanel) in beforeLoad, so admins and members each land only in their own panel; server functions still verify roles themselves.
+- Validate registration invitations through the boolean-only is_registration_invite_valid RPC using the same browser client as signup; this avoids environment mismatches and never exposes profile rows.

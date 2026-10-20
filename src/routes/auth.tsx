@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 
 import { linkReferralCode } from "@/lib/admin.functions";
-import { resolveLoginEmail, checkInviteCode } from "@/lib/auth.functions";
+import { resolveLoginEmail } from "@/lib/auth.functions";
 import { TopBar } from "@/components/AppShell";
 import { useI18n } from "@/lib/i18n";
 import { CountrySelect } from "@/components/CountrySelect";
@@ -103,7 +103,6 @@ function AuthPage() {
   
   const linkReferral = useServerFn(linkReferralCode);
   const resolveEmail = useServerFn(resolveLoginEmail);
-  const checkInvite = useServerFn(checkInviteCode);
 
   // shared
   const [email, setEmail] = useState("");
@@ -164,8 +163,8 @@ function AuthPage() {
     setErrors({});
     setLoading(true);
     try {
-      let inviteOk = false;
-      try { inviteOk = (await checkInvite({ data: { code: inviteCode.trim() } })).valid; } catch { inviteOk = false; }
+      const { data: inviteOk, error: inviteError } = await supabase.rpc("is_registration_invite_valid", { code: inviteCode.trim() });
+      if (inviteError) throw new Error("Unable to check the invitation code right now. Please try again.");
       if (!inviteOk) {
         setErrors({ inviteCode: "Invalid invitation code" });
         return;
