@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { chatBodyText } from "@/lib/chat-format";
 
 export type ChatAttachment = { name: string; type: string; url?: string };
 
@@ -42,10 +43,11 @@ export function useMyChat(userId?: string) {
     enabled: !!userId,
     refetchInterval: 5000,
     queryFn: async () => {
+      if (!userId) return [];
       const { data, error } = await supabase
         .from("support_messages")
         .select("*")
-        .eq("user_id", userId!)
+        .eq("user_id", userId)
         .order("created_at", { ascending: true });
       if (error) throw error;
       return asMessages(data);
@@ -91,7 +93,7 @@ export function useAllChats(enabled = true) {
             .toUpperCase(),
           unread: list.filter((m) => m.sender === "user" && !m.read_by_admin).length,
           lastAt: last?.created_at ?? new Date().toISOString(),
-          preview: last?.body || (last?.attachments.length ? "Attachment" : ""),
+          preview: (last?.body ? (last.sender === "admin" ? chatBodyText(last.body) : last.body) : "") || (last?.attachments.length ? "Attachment" : ""),
           messages: list,
         };
       }).sort((a, b) => b.lastAt.localeCompare(a.lastAt));

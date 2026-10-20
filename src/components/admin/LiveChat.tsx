@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Send, MessageCircle, Paperclip } from "lucide-react";
+import { MessageCircle, Paperclip } from "lucide-react";
+import { ChatReplyComposer } from "@/components/admin/ChatReplyComposer";
+import { ChatMessageBody } from "@/components/ChatMessageBody";
 import { useAllChats, useChatRealtime, sendChatMessage, markThreadRead } from "@/lib/chat";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 export function LiveChat({ initialThreadId }: { initialThreadId?: string | null }) {
   const qc = useQueryClient();
   const { data: threads = [], isLoading } = useAllChats();
   useChatRealtime([["support-chat-all"]]);
   const [activeId, setActiveId] = useState<string | null>(initialThreadId ?? null);
-  const [draft, setDraft] = useState("");
 
   useEffect(() => {
     if (!activeId && threads.length) setActiveId(threads[0].id);
@@ -27,16 +25,10 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
     }
   }, [active?.id, active?.unread, qc]);
 
-  const send = async () => {
-    const text = draft.trim();
-    if (!text || !active) return;
-    setDraft("");
-    try {
-      await sendChatMessage({ userId: active.id, sender: "admin", body: text });
-      qc.invalidateQueries({ queryKey: ["support-chat-all"] });
-    } catch (e: any) {
-      toast.error(e.message ?? "Could not send message");
-    }
+  const send = async (body: string) => {
+    if (!active) throw new Error("Select a conversation first.");
+    await sendChatMessage({ userId: active.id, sender: "admin", body });
+    await qc.invalidateQueries({ queryKey: ["support-chat-all"] });
   };
 
   return (
@@ -45,7 +37,7 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
         <h1 className="text-2xl font-bold">Live Chat</h1>
         <p className="text-sm text-muted-foreground">Real-time support conversations with users.</p>
       </div>
-      <div className="grid md:grid-cols-[280px_1fr] gap-3">
+      <div className="grid md:grid-cols-[280px_minmax(0,1fr)] gap-3">
         <div className="bg-card border border-border rounded-xl overflow-hidden">
           <ul className="divide-y divide-border max-h-[70vh] overflow-auto">
             {threads.length === 0 && (
@@ -70,14 +62,14 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
             ))}
           </ul>
         </div>
-        <div className="bg-card border border-border rounded-xl flex flex-col min-h-[60vh]">
+        <div className="bg-card border border-border rounded-xl flex min-w-0 flex-col min-h-[60vh]">
           <div className="px-4 py-3 border-b border-border font-semibold flex items-center gap-2">
             <MessageCircle className="w-4 h-4 text-[var(--nrc-gold)]" /> {active?.name ?? "No conversation"}
           </div>
           <div className="flex-1 p-4 space-y-3 overflow-auto">
             {active?.messages.map((m) => (
               <div key={m.id} className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${m.sender === "admin" ? "ml-auto bg-[var(--nrc-green)] text-primary-foreground" : "bg-muted"}`}>
-                {m.body && <div>{m.body}</div>}
+                {m.body && <ChatMessageBody body={m.body} formatted={m.sender === "admin"} />}
                 {m.attachments.map((a, i) => (
                   <div key={i} className="mt-1 inline-flex items-center gap-1 text-[11px] opacity-90">
                     <Paperclip className="w-3 h-3" /> {a.name}
@@ -87,11 +79,7 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
               </div>
             ))}
           </div>
-          <div className="p-3 border-t border-border flex gap-2">
-            <Input value={draft} disabled={!active} onChange={(e) => setDraft(e.target.value)} placeholder="Type a reply…"
-              onKeyDown={(e) => e.key === "Enter" && send()} />
-            <Button onClick={send} disabled={!active}><Send className="w-4 h-4" /></Button>
-          </div>
+          <ChatReplyComposer key={active?.id ?? "empty"} disabled={!active} onSend={send} />
         </div>
       </div>
     </div>
