@@ -1,23 +1,11 @@
 import scMark from "@/assets/sc-mark.png.asset.json";
 import heroSpotify from "@/assets/hero-spotify.png.asset.json";
 import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
-import tiktokPhones from "@/assets/tiktok-phones.jpg.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
-import storyTop from "@/assets/story-top.jpg.asset.json";
-import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
-import creatorsList from "@/assets/creators-list.jpg.asset.json";
-import releasesList from "@/assets/releases-list.jpg.asset.json";
-import tiktokChart from "@/assets/tiktok-chart.png.asset.json";
-import artistWall from "@/assets/artist-wall.png.asset.json";
-import avatarTyrone from "@/assets/avatar-tyrone.png.asset.json";
-import avatarSantiago from "@/assets/avatar-santiago.png.asset.json";
-import avatarStefan from "@/assets/avatar-stefan.png.asset.json";
-import avatarJoseph from "@/assets/avatar-joseph.png.asset.json";
-import avatarRichard from "@/assets/avatar-richard.png.asset.json";
 
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { CountUp } from "@/components/CountUp";
 import { shareImageMeta } from "@/lib/social-sharing";
 import { getRequestOrigin } from "@/lib/origin.functions";
@@ -32,29 +20,6 @@ const stats: { to: number; decimals?: number; suffix: string; label: string }[] 
 
 
 import { ArrowRight, Check, X, ChevronDown, Heart } from "lucide-react";
-import brandSpotify from "@/assets/brand-spotify.png.asset.json";
-import brandApple from "@/assets/brand-apple.png.asset.json";
-import brandSoundCampaign from "@/assets/brand-soundcloud.png.asset.json";
-import brandYoutube from "@/assets/brand-youtube.png.asset.json";
-import brandTidal from "@/assets/brand-tidal.png.asset.json";
-import brandDeezer from "@/assets/brand-deezer.png.asset.json";
-import brandSymphonic from "@/assets/brand-symphonic.png.asset.json";
-import brandDitto from "@/assets/brand-ditto.png.asset.json";
-import brandAwal from "@/assets/brand-awal.png.asset.json";
-import brandWarner from "@/assets/brand-warner.png.asset.json";
-
-const TRUSTED_LOGOS: { name: string; src: string }[] = [
-  { name: "Spotify", src: brandSpotify.url },
-  { name: "Symphonic", src: brandSymphonic.url },
-  { name: "Apple Music", src: brandApple.url },
-  { name: "Ditto", src: brandDitto.url },
-  { name: "SoundCloud", src: brandSoundCampaign.url },
-  { name: "AWAL", src: brandAwal.url },
-  { name: "YouTube Music", src: brandYoutube.url },
-  { name: "Warner Music Group", src: brandWarner.url },
-  { name: "Tidal", src: brandTidal.url },
-  { name: "Deezer", src: brandDeezer.url },
-];
 
 
 
@@ -89,6 +54,11 @@ export const Route = createFileRoute("/")({
 const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
 
+function handleImageError(event: SyntheticEvent<HTMLImageElement>) {
+  event.currentTarget.onerror = null;
+  event.currentTarget.src = "/og-soundcampaign.jpg";
+}
+
 const tiktokPoints = [
   "Creators use your music in their videos",
   "Grow your global audience in just days",
@@ -100,7 +70,7 @@ const tiktokPoints = [
 const testimonials = [
   {
     name: "Tyrone",
-    avatar: avatarTyrone.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-tz91c870EdRO0p3gDExgVCVRBbKne1.png",
     stars: 5,
     role: "Rapper",
     quote:
@@ -108,7 +78,7 @@ const testimonials = [
   },
   {
     name: "Santiago",
-    avatar: avatarSantiago.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-dcDO0tNGKEdTIEnAKmRje4GW3yGdSv.png",
     stars: 5,
     role: "Singer & Music Producer / Reached over 500K streams on Spotify",
     quote:
@@ -116,7 +86,7 @@ const testimonials = [
   },
   {
     name: "Stefan",
-    avatar: avatarStefan.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l2al7vNdpKBcjBlkFp3CqBgSA1Rj0T.png",
     stars: 4,
     role: "DJ & Music Producer",
     quote:
@@ -124,7 +94,7 @@ const testimonials = [
   },
   {
     name: "Joseph",
-    avatar: avatarJoseph.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-vGlnf2IHJrFTOIQxjB0s98vsX1dtbP.png",
     stars: 5,
     role: "Singer / Reached over 350K streams on Spotify",
     quote:
@@ -132,7 +102,7 @@ const testimonials = [
   },
   {
     name: "Richard",
-    avatar: avatarRichard.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-wQEPxIqkXRX5W7q8O3UHzM768yekMO.png",
     stars: 5,
     role: "Singer",
     quote:
@@ -140,7 +110,7 @@ const testimonials = [
   },
   {
     name: "Amara",
-    avatar: undefined as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-8bOZmsPHyd7hA0elCXUjQDBB44MXV5.png",
     stars: 5,
     role: "Independent Artist",
     quote:
@@ -303,14 +273,21 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-6 sm:gap-x-10 opacity-80">
-          {TRUSTED_LOGOS.map((l) => (
+        <div className="mt-8 flex min-h-[118px] flex-wrap items-center justify-center gap-x-6 gap-y-7 overflow-hidden rounded-sm bg-black px-4 py-7 sm:gap-x-10 md:gap-x-14">
+          {[
+            ["/logo-spotify.png", "Spotify"],
+            ["/logo-symphonic.png", "Symphonic"],
+            ["/logo-apple-music.png", "Apple Music"],
+            ["/logo-ditto.png", "Ditto"],
+            ["/logo-youtube-music.png", "YouTube Music"],
+            ["/logo-warner-music.png", "Warner Music Group"],
+            ["/logo-equalizer.png", "Music platform"],
+          ].map(([src, alt]) => (
             <img
-              key={l.name}
-              src={l.src}
-              alt={l.name}
-              loading="lazy"
-              className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
+              key={src}
+              src={src}
+              alt={alt}
+              className="h-auto max-h-10 w-auto max-w-[82px] object-contain sm:max-h-14 sm:max-w-[150px]"
             />
           ))}
         </div>
@@ -321,8 +298,8 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src={storyTop.url}
-            alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
+            src="/olivia-rose-playlist.png"
+            alt="Olivia Rose playlist promotion featuring girls like you by Olivia Rodrigo"
             loading="lazy"
             className="block w-full"
           />
@@ -351,7 +328,7 @@ function Landing() {
             </Link>
           </div>
           <img
-            src={worldMap.url}
+            src="/global-network-map.png"
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
             width={1536}
@@ -387,7 +364,7 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src={tiktokPhones.url}
+            src="/tiktok-creator-phones.png"
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
@@ -399,7 +376,7 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={creatorsList.url}
+          src="/music-creators.png"
           alt="TikTok creators with follower and like counts"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -453,7 +430,7 @@ function Landing() {
           </p>
         </div>
         <img
-          src={releasesList.url}
+          src="/fresh-releases.png"
           alt="Campaign releases with days left and details"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -464,7 +441,7 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={tiktokChart.url}
+          src="/trending-sounds.png"
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
           className="w-full rounded-2xl"
@@ -491,7 +468,7 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src={artistWall.url}
+          src="/artist-wall.png"
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
           className="w-full"
@@ -511,6 +488,7 @@ function Landing() {
                 {t.avatar ? (
                   <img
                     src={t.avatar}
+                    onError={handleImageError}
                     alt={`${t.name}, ${t.role}`}
                     loading="lazy"
                     className="h-12 w-12 shrink-0 rounded-full object-cover"
