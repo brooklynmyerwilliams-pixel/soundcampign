@@ -418,6 +418,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_registration_invite_valid: { Args: { code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
