@@ -234,7 +234,15 @@ function Landing() {
   const [showAllTestimonials, setShowAllTestimonials] = useState(true);
 
   return (
-    <div className="min-h-screen bg-[var(--lp-bg)] text-[var(--lp-text)]">
+    <div
+      className="min-h-screen bg-[var(--lp-bg)] text-[var(--lp-text)]"
+      onErrorCapture={(event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLImageElement) || target.dataset.fallbackApplied === "true") return;
+        target.dataset.fallbackApplied = "true";
+        target.src = target.alt.toLowerCase().includes("logo") || target.alt.toLowerCase().includes("spotify") ? "/favicon.png" : "/og-soundcampaign.jpg";
+      }}
+    >
       {/* Nav */}
       <header className="sticky top-0 z-40 border-b border-[var(--lp-border)] bg-[var(--lp-bg)]/90 backdrop-blur">
         <div className="mx-auto grid min-h-16 max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 md:flex md:justify-between">
@@ -321,7 +329,7 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src={storyTop.url}
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-9B69UVRj9zYr7lPB9NMmBAupmLNqiw.png"
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
             className="block w-full"
@@ -351,7 +359,7 @@ function Landing() {
             </Link>
           </div>
           <img
-            src={worldMap.url}
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-jVaQNXWxR87eWKIKkKwsMK4TRKJltf.png"
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
             width={1536}
@@ -387,7 +395,7 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src={tiktokPhones.url}
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-6zad1NQjRyGlq8HSp9UNYzGZxyWt35.png"
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
@@ -399,7 +407,7 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={creatorsList.url}
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-yhpEPL4ZM7tv6byYkL4sYhvxqUSXPY.png"
           alt="TikTok creators with follower and like counts"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -453,7 +461,7 @@ function Landing() {
           </p>
         </div>
         <img
-          src={releasesList.url}
+          src="/soundcampaign-music-promotion.jpg"
           alt="Campaign releases with days left and details"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -464,7 +472,7 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={tiktokChart.url}
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-mWDL9P1GtTbEnsUWZMUcnWEvOWwlcs.png"
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
           className="w-full rounded-2xl"
@@ -491,7 +499,7 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src={artistWall.url}
+          src="/soundcampaign-music-promotion.jpg"
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
           className="w-full"
