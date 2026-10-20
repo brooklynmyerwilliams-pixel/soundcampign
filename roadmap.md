@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Add bold, highlight, paragraphs and preserved spacing to administrator live-chat replies; verify saved messages display correctly for members and administrators.
+
 - [done] Verified published badge is hidden and SoundCampaign icons load; branded JPEG previews now cover all 19 page URLs, including client-only account pages, without changing designs or exposing account data. Four targeted tests pass; public and signed-in browser checks pass. Publish required for expanded account-page previews to reach the live site.
 
 - [done] Replaced platform branding website-wide with SoundCampaign, including public/member/admin wordmarks, page titles and support copy. Public home and sign-up verified in browser; authenticated pages checked in source (no session available). Third-party SoundCloud partner references retained. Publish required for live changes.
