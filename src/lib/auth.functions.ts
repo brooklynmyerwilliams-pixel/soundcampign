@@ -26,11 +26,7 @@ export const checkInviteCode = createServerFn({ method: "GET" })
   )
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: prof } = await supabaseAdmin
-      .from("profiles")
-      .select("id, suspended")
-      .eq("invite_code", data.code.toUpperCase())
-      .limit(1)
-      .maybeSingle();
-    return { valid: !!prof && !prof.suspended };
+    const { data: valid, error } = await supabaseAdmin.rpc("is_registration_invite_valid", { code: data.code });
+    if (error) throw new Error("Unable to check the invitation code right now. Please try again.");
+    return { valid: valid === true };
   });
