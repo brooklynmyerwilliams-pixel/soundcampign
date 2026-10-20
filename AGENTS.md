@@ -13,4 +13,5 @@
 - Use the pure account-pairing helper to group administrator account lists by profiles.referred_by, never positional sorting, so filtering and multiple referrals preserve the true relationship.
 - Derive displayed membership counts from WAREHOUSE_TIERS rather than legacy vip_plans rows, so overview totals match the membership selector without changing stored user ranks.
 - Build public share-image, og:url and canonical URLs from the request origin (getRequestOrigin loader + shareImageMeta), serving the branded JPEG from public, so previews work on whatever domain the site is published to.
+- Supply missing social image tags for client-only pages through HTML response middleware, never root/layout head tags or account rendering; this prevents automatic screenshots while preserving private-page access controls and leaf image overrides.
 - Gate every _authenticated page with the role-guard helpers (requireAdminPanel / requireUserPanel) in beforeLoad, so admins and members each land only in their own panel; server functions still verify roles themselves.
