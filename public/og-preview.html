@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: oklch(0.13 0 0);
+    color: oklch(0.98 0 0);
+    position: relative;
+  }
+  .glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(700px 420px at 88% 8%, oklch(0.78 0.2 155 / 0.16), transparent 65%),
+      radial-gradient(600px 380px at 6% 96%, oklch(0.78 0.2 155 / 0.10), transparent 65%);
+  }
+  .wrap {
+    position: relative; height: 100%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 52px 64px 46px;
+  }
+  .top { display: flex; align-items: center; gap: 16px; }
+  .top img { width: 52px; height: 52px; }
+  .top .name { font-size: 30px; font-weight: 800; letter-spacing: 0.5px; }
+  .top .name span { color: oklch(0.78 0.2 155); }
+  h1 { font-size: 74px; line-height: 1.04; font-weight: 800; max-width: 900px; }
+  h1 em { font-style: normal; color: oklch(0.78 0.2 155); }
+  .sub { margin-top: 20px; font-size: 26px; color: oklch(0.75 0 0); font-weight: 500; }
+  .proof { display: flex; align-items: center; gap: 14px; margin-top: 30px; }
+  .stars { color: oklch(0.85 0.17 145); font-size: 26px; letter-spacing: 4px; }
+  .proof .t { font-size: 22px; color: oklch(0.85 0 0); font-weight: 600; }
+  .proof .t b { color: oklch(0.98 0 0); }
+  .logos {
+    display: flex; align-items: center; gap: 44px;
+    border-top: 1px solid oklch(0.28 0 0); padding-top: 30px;
+  }
+  .logos img { height: 34px; object-fit: contain; }
+  .logos .lbl { font-size: 17px; font-weight: 700; color: oklch(0.6 0 0); text-transform: uppercase; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="wrap">
+    <div class="top">
+      <img src="/favicon.png" alt="">
+      <div class="name">SOUND<span>CAMPAIGN</span></div>
+    </div>
+    <div>
+      <h1>Music promotion with <em>proven results</em>.</h1>
+      <div class="sub">Real playlist placements, TikTok reach and honest curator feedback.</div>
+      <div class="proof">
+        <span class="stars">★★★★★</span>
+        <span class="t">Excellent · Trusted by <b>100,000+</b> artists &amp; labels</span>
+      </div>
+    </div>
+    <div class="logos">
+      <span class="lbl">Trusted by the industry</span>
+      <img src="/logo-spotify.png" alt="">
+      <img src="/logo-apple-music.png" alt="">
+      <img src="/logo-youtube-music.png" alt="">
+      <img src="/logo-symphonic.png" alt="">
+      <img src="/logo-ditto.png" alt="">
+      <img src="/logo-warner-music.png" alt="">
+    </div>
+  </div>
+</body>
+</html>
