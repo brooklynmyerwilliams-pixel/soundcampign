@@ -47,8 +47,26 @@ function useAdminIds() {
 export function UserManagement() {
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const { data: all = [] } = useUsers();
   const { data: adminIds } = useAdminIds();
+
+  useEffect(() => {
+    const refreshUsers = () => {
+      void queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      void queryClient.invalidateQueries({ queryKey: ["admin-role-ids"] });
+    };
+
+    const channel = supabase
+      .channel("admin-user-list-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, refreshUsers)
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_roles" }, refreshUsers)
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const pairs = useMemo(() => pairAccounts(all, adminIds), [all, adminIds]);
   const filtered = useMemo(() => pairs.filter((pair) =>
