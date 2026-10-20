@@ -130,7 +130,7 @@ export const listUserAccounts = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("profiles")
-      .select("*")
+      .select("id, username, display_name, phone, balance, vip_level, invite_code, referred_by, created_at, is_training, level_locked, suspended, team_size, total_earned, credit_score, avatar_url, updated_at")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
 

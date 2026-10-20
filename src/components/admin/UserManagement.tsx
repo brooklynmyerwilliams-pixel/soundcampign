@@ -48,7 +48,7 @@ export function UserManagement() {
   const [q, setQ] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const { data: all = [] } = useUsers();
+  const { data: all = [], isLoading, error } = useUsers();
   const { data: adminIds } = useAdminIds();
 
   useEffect(() => {
@@ -75,6 +75,8 @@ export function UserManagement() {
   const trainingCount = all.filter((account) => account.is_training).length;
   const current = all.find((u) => u.id === selected);
   if (current) return <UserDetail user={current} onBack={() => setSelected(null)} />;
+  if (isLoading) return <div className="p-6 text-center text-sm text-muted-foreground">Loading users…</div>;
+  if (error) return <div className="p-6 text-center text-sm text-destructive">Unable to load users: {error instanceof Error ? error.message : "Unknown error"}</div>;
 
   return (
     <div className="space-y-4">
