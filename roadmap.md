@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fix registration invitation validation for administrator and active member codes; verify both through registration.
+
 - [done] Replaced platform branding website-wide with SoundCampaign, including public/member/admin wordmarks, page titles and support copy. Public home and sign-up verified in browser; authenticated pages checked in source (no session available). Third-party SoundCloud partner references retained. Publish required for live changes.
 
 - [done] Published Lovable badge hidden and verified; SoundCampaign music-promotion thumbnail configured for home and sign-up/referral links, verified in browser and server-rendered sharing details. Publish required for the new thumbnail to reach the live domain.
