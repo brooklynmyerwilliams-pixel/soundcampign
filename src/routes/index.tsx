@@ -44,16 +44,16 @@ import brandAwal from "@/assets/brand-awal.png.asset.json";
 import brandWarner from "@/assets/brand-warner.png.asset.json";
 
 const TRUSTED_LOGOS: { name: string; src: string }[] = [
-  { name: "Spotify", src: "/favicon.png" },
-  { name: "Symphonic", src: "/favicon.png" },
-  { name: "Apple Music", src: "/favicon.png" },
-  { name: "Ditto", src: "/favicon.png" },
-  { name: "SoundCloud", src: "/favicon.png" },
-  { name: "AWAL", src: "/favicon.png" },
-  { name: "YouTube Music", src: "/favicon.png" },
-  { name: "Warner Music Group", src: "/favicon.png" },
-  { name: "Tidal", src: "/favicon.png" },
-  { name: "Deezer", src: "/favicon.png" },
+  { name: "Spotify", src: brandSpotify.url },
+  { name: "Symphonic", src: brandSymphonic.url },
+  { name: "Apple Music", src: brandApple.url },
+  { name: "Ditto", src: brandDitto.url },
+  { name: "SoundCloud", src: brandSoundCampaign.url },
+  { name: "AWAL", src: brandAwal.url },
+  { name: "YouTube Music", src: brandYoutube.url },
+  { name: "Warner Music Group", src: brandWarner.url },
+  { name: "Tidal", src: brandTidal.url },
+  { name: "Deezer", src: brandDeezer.url },
 ];
 
 
