@@ -46,6 +46,8 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-chat-highlight: var(--chat-highlight);
+  --color-chat-highlight-foreground: var(--chat-highlight-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -101,6 +103,8 @@
   --nrc-green-dark: oklch(0.12 0.03 160);
   --nrc-gold: oklch(0.78 0.16 75);
   --nrc-orange: oklch(0.68 0.18 45);
+  --chat-highlight: oklch(0.91 0.15 95);
+  --chat-highlight-foreground: oklch(0.24 0.04 85);
   /* Analytics section */
   --analytics-bg-from: oklch(0.97 0.01 155);
   --analytics-bg-via: oklch(0.95 0.01 240);
@@ -167,6 +171,8 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);
+  --chat-highlight: oklch(0.88 0.15 95);
+  --chat-highlight-foreground: oklch(0.2 0.03 85);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
@@ -212,4 +218,29 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
+}
+
+.chat-message-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.chat-message-content p {
+  margin: 0;
+  min-height: 1.4em;
+}
+
+.chat-message-content p + p {
+  margin-top: 0.75em;
+}
+
+.chat-message-content strong {
+  font-weight: 700;
+}
+
+.chat-message-content mark {
+  background-color: var(--chat-highlight);
+  color: var(--chat-highlight-foreground);
+  border-radius: 2px;
+  padding-inline: 0.08em;
 }

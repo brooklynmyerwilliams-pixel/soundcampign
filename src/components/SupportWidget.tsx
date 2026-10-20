@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyChat, useChatRealtime, sendChatMessage, markThreadRead } from "@/lib/chat";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { ChatMessageBody } from "@/components/ChatMessageBody";
 
 const WHATSAPP_NUMBER = "12025550147"; // digits only, no +
 const TELEGRAM_USERNAME = "soundcampaign_support";
@@ -196,7 +197,7 @@ export function SupportWidget() {
                         : "mr-auto bg-muted text-foreground",
                     )}
                   >
-                    {m.text && <span className="whitespace-pre-wrap">{m.text}</span>}
+                    {m.text && <ChatMessageBody body={m.text} formatted={m.from === "agent"} />}
                     {m.files && m.files.length > 0 && (
                       <div className={cn("space-y-1", m.text && "mt-2")}>
                         {m.files.map((f, fi) => (
