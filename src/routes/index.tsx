@@ -1,15 +1,8 @@
 import scMark from "@/assets/sc-mark.png.asset.json";
 import heroSpotify from "@/assets/hero-spotify.png.asset.json";
 import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
-import tiktokPhones from "@/assets/tiktok-phones.jpg.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
-import storyTop from "@/assets/story-top.jpg.asset.json";
-import worldMap from "@/assets/world-map.jpg.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
-import creatorsList from "@/assets/creators-list.jpg.asset.json";
-import releasesList from "@/assets/releases-list.jpg.asset.json";
-import tiktokChart from "@/assets/tiktok-chart.png.asset.json";
-import artistWall from "@/assets/artist-wall.png.asset.json";
 import avatarTyrone from "@/assets/avatar-tyrone.png.asset.json";
 import avatarSantiago from "@/assets/avatar-santiago.png.asset.json";
 import avatarStefan from "@/assets/avatar-stefan.png.asset.json";
@@ -17,7 +10,7 @@ import avatarJoseph from "@/assets/avatar-joseph.png.asset.json";
 import avatarRichard from "@/assets/avatar-richard.png.asset.json";
 
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { CountUp } from "@/components/CountUp";
 import { shareImageMeta } from "@/lib/social-sharing";
 import { getRequestOrigin } from "@/lib/origin.functions";
@@ -32,28 +25,18 @@ const stats: { to: number; decimals?: number; suffix: string; label: string }[] 
 
 
 import { ArrowRight, Check, X, ChevronDown, Heart } from "lucide-react";
-import brandSpotify from "@/assets/brand-spotify.png.asset.json";
-import brandApple from "@/assets/brand-apple.png.asset.json";
-import brandSoundCampaign from "@/assets/brand-soundcloud.png.asset.json";
-import brandYoutube from "@/assets/brand-youtube.png.asset.json";
-import brandTidal from "@/assets/brand-tidal.png.asset.json";
-import brandDeezer from "@/assets/brand-deezer.png.asset.json";
-import brandSymphonic from "@/assets/brand-symphonic.png.asset.json";
-import brandDitto from "@/assets/brand-ditto.png.asset.json";
-import brandAwal from "@/assets/brand-awal.png.asset.json";
-import brandWarner from "@/assets/brand-warner.png.asset.json";
 
-const TRUSTED_LOGOS: { name: string; src: string }[] = [
-  { name: "Spotify", src: brandSpotify.url },
-  { name: "Symphonic", src: brandSymphonic.url },
-  { name: "Apple Music", src: brandApple.url },
-  { name: "Ditto", src: brandDitto.url },
-  { name: "SoundCloud", src: brandSoundCampaign.url },
-  { name: "AWAL", src: brandAwal.url },
-  { name: "YouTube Music", src: brandYoutube.url },
-  { name: "Warner Music Group", src: brandWarner.url },
-  { name: "Tidal", src: brandTidal.url },
-  { name: "Deezer", src: brandDeezer.url },
+const TRUSTED_LOGOS = [
+  "Spotify",
+  "Symphonic",
+  "Apple Music",
+  "Ditto",
+  "SoundCloud",
+  "AWAL",
+  "YouTube Music",
+  "Warner Music Group",
+  "Tidal",
+  "Deezer",
 ];
 
 
@@ -88,6 +71,11 @@ export const Route = createFileRoute("/")({
 
 const green = "text-[var(--lp-green)]";
 const card = "rounded-2xl border border-[var(--lp-border)] bg-[var(--lp-surface)]";
+
+function handleImageError(event: SyntheticEvent<HTMLImageElement>) {
+  event.currentTarget.onerror = null;
+  event.currentTarget.src = "/og-soundcampaign.jpg";
+}
 
 const tiktokPoints = [
   "Creators use your music in their videos",
@@ -304,14 +292,15 @@ function Landing() {
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-6 sm:gap-x-10 opacity-80">
-          {TRUSTED_LOGOS.map((l) => (
-            <img
-              key={l.name}
-              src={l.src}
-              alt={l.name}
-              loading="lazy"
-              className="h-6 w-auto max-w-[130px] object-contain sm:h-9 sm:max-w-[160px]"
-            />
+          {TRUSTED_LOGOS.map((name) => (
+            <div
+              key={name}
+              role="img"
+              aria-label={name}
+              className="flex h-9 min-w-[110px] items-center justify-center rounded-lg border border-white/10 bg-white/[0.04] px-3 text-center text-sm font-semibold text-white/80 sm:min-w-[135px] sm:text-base"
+            >
+              {name}
+            </div>
           ))}
         </div>
       </section>
@@ -321,7 +310,8 @@ function Landing() {
       <section id="spotify" className="mx-auto max-w-6xl px-4 py-12">
         <div className="overflow-hidden rounded-[28px]">
           <img
-            src={storyTop.url}
+            src="/og-soundcampaign.jpg"
+            onError={handleImageError}
             alt="Spotify promotion, perfect playlist matching, curator feedback and pay only when reviewed"
             loading="lazy"
             className="block w-full"
@@ -351,7 +341,8 @@ function Landing() {
             </Link>
           </div>
           <img
-            src={worldMap.url}
+            src="/og-soundcampaign.jpg"
+                onError={handleImageError}
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
             width={1536}
@@ -387,7 +378,8 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src={tiktokPhones.url}
+            src="/og-soundcampaign.jpg"
+            onError={handleImageError}
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
@@ -399,7 +391,8 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={creatorsList.url}
+          src="/og-soundcampaign.jpg"
+          onError={handleImageError}
           alt="TikTok creators with follower and like counts"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -453,7 +446,8 @@ function Landing() {
           </p>
         </div>
         <img
-          src={releasesList.url}
+          src="/og-soundcampaign.jpg"
+          onError={handleImageError}
           alt="Campaign releases with days left and details"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -464,7 +458,8 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src={tiktokChart.url}
+          src="/og-soundcampaign.jpg"
+          onError={handleImageError}
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
           className="w-full rounded-2xl"
@@ -491,7 +486,8 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src={artistWall.url}
+          src="/og-soundcampaign.jpg"
+          onError={handleImageError}
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
           className="w-full"
@@ -510,7 +506,8 @@ function Landing() {
               <div className="flex items-center gap-3">
                 {t.avatar ? (
                   <img
-                    src={t.avatar}
+                    src="/og-soundcampaign.jpg"
+                    onError={handleImageError}
                     alt={`${t.name}, ${t.role}`}
                     loading="lazy"
                     className="h-12 w-12 shrink-0 rounded-full object-cover"
