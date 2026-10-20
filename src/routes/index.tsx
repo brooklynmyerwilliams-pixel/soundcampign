@@ -3,11 +3,6 @@ import heroSpotify from "@/assets/hero-spotify.png.asset.json";
 import heroTiktok from "@/assets/hero-tiktok.png.asset.json";
 import heroPhone from "@/assets/hero-phone.png.asset.json";
 import heroAvatars from "@/assets/hero-avatars.png.asset.json";
-import avatarTyrone from "@/assets/avatar-tyrone.png.asset.json";
-import avatarSantiago from "@/assets/avatar-santiago.png.asset.json";
-import avatarStefan from "@/assets/avatar-stefan.png.asset.json";
-import avatarJoseph from "@/assets/avatar-joseph.png.asset.json";
-import avatarRichard from "@/assets/avatar-richard.png.asset.json";
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type SyntheticEvent } from "react";
@@ -75,7 +70,7 @@ const tiktokPoints = [
 const testimonials = [
   {
     name: "Tyrone",
-    avatar: avatarTyrone.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-tz91c870EdRO0p3gDExgVCVRBbKne1.png",
     stars: 5,
     role: "Rapper",
     quote:
@@ -83,7 +78,7 @@ const testimonials = [
   },
   {
     name: "Santiago",
-    avatar: avatarSantiago.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-dcDO0tNGKEdTIEnAKmRje4GW3yGdSv.png",
     stars: 5,
     role: "Singer & Music Producer / Reached over 500K streams on Spotify",
     quote:
@@ -91,7 +86,7 @@ const testimonials = [
   },
   {
     name: "Stefan",
-    avatar: avatarStefan.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l2al7vNdpKBcjBlkFp3CqBgSA1Rj0T.png",
     stars: 4,
     role: "DJ & Music Producer",
     quote:
@@ -99,7 +94,7 @@ const testimonials = [
   },
   {
     name: "Joseph",
-    avatar: avatarJoseph.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-vGlnf2IHJrFTOIQxjB0s98vsX1dtbP.png",
     stars: 5,
     role: "Singer / Reached over 350K streams on Spotify",
     quote:
@@ -107,7 +102,7 @@ const testimonials = [
   },
   {
     name: "Richard",
-    avatar: avatarRichard.url as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-wQEPxIqkXRX5W7q8O3UHzM768yekMO.png",
     stars: 5,
     role: "Singer",
     quote:
@@ -115,7 +110,7 @@ const testimonials = [
   },
   {
     name: "Amara",
-    avatar: undefined as string | undefined,
+    avatar: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-8bOZmsPHyd7hA0elCXUjQDBB44MXV5.png",
     stars: 5,
     role: "Independent Artist",
     quote:
@@ -278,7 +273,7 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 grid min-h-[118px] grid-cols-4 items-center gap-5 overflow-hidden rounded-sm bg-black px-4 py-7 sm:flex sm:justify-center sm:gap-12 md:gap-16">
+        <div className="mt-8 flex min-h-[118px] flex-wrap items-center justify-center gap-x-6 gap-y-7 overflow-hidden rounded-sm bg-black px-4 py-7 sm:gap-x-10 md:gap-x-14">
           {[
             ["/logo-spotify.png", "Spotify"],
             ["/logo-symphonic.png", "Symphonic"],
@@ -292,7 +287,7 @@ function Landing() {
               key={src}
               src={src}
               alt={alt}
-              className="mx-auto h-10 w-auto max-w-[72px] object-contain sm:mx-0 sm:h-14 sm:max-w-[150px]"
+              className="h-auto max-h-10 w-auto max-w-[82px] object-contain sm:max-h-14 sm:max-w-[150px]"
             />
           ))}
         </div>
@@ -492,7 +487,7 @@ function Landing() {
               <div className="flex items-center gap-3">
                 {t.avatar ? (
                   <img
-                    src="/og-soundcampaign.jpg"
+                    src={t.avatar}
                     onError={handleImageError}
                     alt={`${t.name}, ${t.role}`}
                     loading="lazy"
