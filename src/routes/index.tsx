@@ -278,7 +278,7 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 flex min-h-[118px] items-center justify-center gap-6 overflow-hidden rounded-sm bg-black px-5 py-7 sm:gap-12 md:gap-16">
+        <div className="mt-8 grid min-h-[118px] grid-cols-4 items-center gap-5 overflow-hidden rounded-sm bg-black px-4 py-7 sm:flex sm:justify-center sm:gap-12 md:gap-16">
           {[
             ["/logo-spotify.png", "Spotify"],
             ["/logo-symphonic.png", "Symphonic"],
@@ -292,7 +292,7 @@ function Landing() {
               key={src}
               src={src}
               alt={alt}
-              className="h-11 w-auto max-w-[120px] shrink-0 object-contain sm:h-14 sm:max-w-[150px]"
+              className="mx-auto h-10 w-auto max-w-[72px] object-contain sm:mx-0 sm:h-14 sm:max-w-[150px]"
             />
           ))}
         </div>
@@ -333,8 +333,7 @@ function Landing() {
             </Link>
           </div>
           <img
-            src="/og-soundcampaign.jpg"
-                onError={handleImageError}
+            src="/global-network-map.png"
             alt="Global network of SoundCampaign artists and curators"
             loading="lazy"
             width={1536}
@@ -370,8 +369,7 @@ function Landing() {
             <div className="hidden lg:block" />
           </div>
           <img
-            src="/og-soundcampaign.jpg"
-            onError={handleImageError}
+            src="/tiktok-creator-phones.png"
             alt="TikTok videos featuring artists promoting music"
             loading="lazy"
             className="pointer-events-none mx-auto -mt-4 w-full max-w-[560px] rounded-2xl select-none object-contain lg:absolute lg:right-4 lg:top-1/2 lg:mt-0 lg:max-h-[460px] lg:w-[48%] lg:-translate-y-1/2"
@@ -383,8 +381,7 @@ function Landing() {
       {/* Creators */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src="/og-soundcampaign.jpg"
-          onError={handleImageError}
+          src="/music-creators.png"
           alt="TikTok creators with follower and like counts"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -438,8 +435,7 @@ function Landing() {
           </p>
         </div>
         <img
-          src="/og-soundcampaign.jpg"
-          onError={handleImageError}
+          src="/fresh-releases.png"
           alt="Campaign releases with days left and details"
           loading="lazy"
           className="mx-auto w-full max-w-md rounded-2xl"
@@ -450,8 +446,7 @@ function Landing() {
       {/* Analytics */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-2">
         <img
-          src="/og-soundcampaign.jpg"
-          onError={handleImageError}
+          src="/trending-sounds.png"
           alt="TikTok campaign video views chart up 89%"
           loading="lazy"
           className="w-full rounded-2xl"
@@ -478,8 +473,7 @@ function Landing() {
       {/* Artist wall */}
       <section className="relative overflow-hidden">
         <img
-          src="/og-soundcampaign.jpg"
-          onError={handleImageError}
+          src="/artist-wall.png"
           alt="We've helped over 100,000 artists be heard"
           loading="lazy"
           className="w-full"
