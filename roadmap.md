@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Add bold, highlight, paragraphs and preserved spacing to administrator live-chat replies; verify saved messages display correctly for members and administrators.
+- [done] Added bold, highlight, paragraphs, line breaks and preserved spacing to administrator live-chat replies; saved/reopened administrator replies verified on desktop and phone, seven tests pass, and build is OK. Member chat uses the same safe renderer; member-session verification was declined. Temporary test reply removed. Publish required for the new editor to reach the live site.
 
 - [done] Verified published badge is hidden and SoundCampaign icons load; branded JPEG previews now cover all 19 page URLs, including client-only account pages, without changing designs or exposing account data. Four targeted tests pass; public and signed-in browser checks pass. Publish required for expanded account-page previews to reach the live site.
 
