@@ -278,14 +278,23 @@ function Landing() {
       {/* Trusted by the industry */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <p className="text-center text-lg font-bold">Trusted by the industry</p>
-        <div className="mt-8 overflow-hidden rounded-sm bg-black">
-          <img
-            src="/trusted-industry-logos.png"
-            alt="Spotify, Symphonic, Apple Music, Ditto, SoundCloud, AWAL, YouTube Music, Warner Music Group, Tidal and Deezer"
-            width={1050}
-            height={118}
-            className="mx-auto block h-auto w-full max-w-[1050px]"
-          />
+        <div className="mt-8 flex min-h-[118px] items-center justify-center gap-6 overflow-hidden rounded-sm bg-black px-5 py-7 sm:gap-12 md:gap-16">
+          {[
+            ["/logo-spotify.png", "Spotify"],
+            ["/logo-symphonic.png", "Symphonic"],
+            ["/logo-apple-music.png", "Apple Music"],
+            ["/logo-ditto.png", "Ditto"],
+            ["/logo-youtube-music.png", "YouTube Music"],
+            ["/logo-warner-music.png", "Warner Music Group"],
+            ["/logo-equalizer.png", "Music platform"],
+          ].map(([src, alt]) => (
+            <img
+              key={src}
+              src={src}
+              alt={alt}
+              className="h-11 w-auto max-w-[120px] shrink-0 object-contain sm:h-14 sm:max-w-[150px]"
+            />
+          ))}
         </div>
       </section>
 
