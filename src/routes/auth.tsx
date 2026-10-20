@@ -56,7 +56,7 @@ const signupSchema = z.object({
   phone: z.string().trim().max(20).optional().or(z.literal("")),
   withdrawPin: z.string().trim().min(4, "Withdrawal PIN must be at least 4 characters").max(32),
   confirmPin: z.string(),
-  inviteCode: z.string().trim().min(1, "Invitation code is required").max(20),
+  inviteCode: z.string().trim().min(1, "Invitation code is required").max(64).regex(/^[A-Za-z0-9_-]+$/, "Use the invitation code exactly as provided"),
   agreed: z.literal(true, { message: "You must accept the Terms and Conditions" }),
 }).refine((d) => d.password === d.confirmPassword, { path: ["confirmPassword"], message: "Passwords do not match" })
   .refine((d) => d.withdrawPin === d.confirmPin, { path: ["confirmPin"], message: "Withdrawal PINs do not match" });
