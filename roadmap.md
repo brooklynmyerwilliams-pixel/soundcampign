@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Fix registration invitation validation for administrator and active member codes; verify both through registration.
+- [done] Fix registration invitation validation for administrator and active member codes; both completed registration and reached the member dashboard. New page check requires publishing to reach the live site.
 
 - [done] Replaced platform branding website-wide with SoundCampaign, including public/member/admin wordmarks, page titles and support copy. Public home and sign-up verified in browser; authenticated pages checked in source (no session available). Third-party SoundCloud partner references retained. Publish required for live changes.
 
