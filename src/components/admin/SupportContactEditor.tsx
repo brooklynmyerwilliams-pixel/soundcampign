@@ -17,23 +17,24 @@ export function SupportContactEditor({ channel }: { channel: ContactChannel }) {
   const [draft, setDraft] = useState<{ value: string; revision: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [removing, setRemoving] = useState(false);
+  const [removalRevision, setRemovalRevision] = useState<number | null>(null);
   const contact = query.data?.[channel];
   const label = channel === "whatsapp" ? "WhatsApp number" : "Telegram contact";
   const value = draft?.value ?? contact?.value ?? "";
   const conflict = !!(draft && contact && hasContactConflict(draft.revision, contact));
+  const removalConflict = !!(contact && removalRevision !== null && hasContactConflict(removalRevision, contact));
 
   const submit = async (remove: boolean) => {
     if (!contact || busy) return;
     setBusy(true);
     setError(null);
     try {
-      const change: ContactChange = { channel, value: remove ? null : value, expectedRevision: draft?.revision ?? contact.revision, remove };
+      const change: ContactChange = { channel, value: remove ? null : value, expectedRevision: remove ? (removalRevision ?? contact.revision) : (draft?.revision ?? contact.revision), remove };
       const saved = await saveContact({ data: change });
       await qc.cancelQueries({ queryKey: SUPPORT_CONTACTS_KEY });
       qc.setQueryData<SupportContacts>(SUPPORT_CONTACTS_KEY, (previous) => previous ? { ...previous, [channel]: saved } : undefined);
       setDraft(null);
-      setRemoving(false);
+      setRemovalRevision(null);
       toast.success(remove ? `${label} removed` : `${label} saved`);
       void qc.invalidateQueries({ queryKey: SUPPORT_CONTACTS_KEY });
     } catch (e) {
@@ -69,18 +70,19 @@ export function SupportContactEditor({ channel }: { channel: ContactChannel }) {
         {busy ? <Loader2 className="animate-spin" /> : <Save />} Save
       </Button>
       {draft && <Button size="sm" variant="outline" disabled={busy} onClick={() => { setDraft(null); setError(null); }}>Cancel</Button>}
-      <Button size="sm" variant="outline" className="text-destructive" disabled={busy || conflict || !contact.value || query.isError} onClick={() => setRemoving(true)}>
+      <Button size="sm" variant="outline" className="text-destructive" disabled={busy || conflict || !contact.value || query.isError} onClick={() => setRemovalRevision(contact.revision)}>
         <Trash2 /> Remove
       </Button>
     </div>
-    <AlertDialog open={removing} onOpenChange={(open) => { if (!busy) setRemoving(open); }}>
+    <AlertDialog open={removalRevision !== null} onOpenChange={(open) => { if (!busy && !open) setRemovalRevision(null); }}>
       <AlertDialogContent>
         <AlertDialogHeader><AlertDialogTitle>Remove {label}?</AlertDialogTitle>
           <AlertDialogDescription>This will remove the saved contact and its link throughout SoundCampaign.</AlertDialogDescription>
         </AlertDialogHeader>
+        {removalConflict && <p role="alert" className="text-sm text-destructive">This contact changed in another session. Cancel and review the updated contact before removing it.</p>}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={busy}>Cancel</AlertDialogCancel>
-          <Button variant="destructive" disabled={busy || conflict} onClick={() => void submit(true)}>
+          <Button variant="destructive" disabled={busy || conflict || removalConflict} onClick={() => void submit(true)}>
             {busy && <Loader2 className="animate-spin" />} Remove contact
           </Button>
         </AlertDialogFooter>
