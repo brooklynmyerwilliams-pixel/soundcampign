@@ -1,5 +1,7 @@
 # Roadmap
 
+- [in progress] Filter member Cashout history to saved deposits and withdrawals only; preserve all matching records and other histories, isolate cached queries, and verify filtering and member-account display.
+
 - [done] Fixed toast-only contact saves and hardcoded support links with durable role-checked revisioned storage, confirmed removal, empty/stale-write protection, and shared live contacts in dashboard and global support. Verified two independent administrator contexts and a phone-sized visitor context: live update in 1.14 seconds, refresh/logout/session persistence, save errors, stale draft blocking, database permission protections, and explicit removal/cancel. Eight tests pass; temporary contacts removed. Publish required; previously unsaved real contacts must be re-entered. Member dashboard uses the same verified links component; no member session was used.
 
 - [done] Added bold, highlight, paragraphs, line breaks and preserved spacing to administrator live-chat replies; saved/reopened administrator replies verified on desktop and phone, seven tests pass, and build is OK. Member chat uses the same safe renderer; member-session verification was declined. Temporary test reply removed. Publish required for the new editor to reach the live site.

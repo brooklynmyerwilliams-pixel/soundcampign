@@ -1,7 +1,9 @@
 import { requireUserPanel } from "@/lib/role-guard";
 import { createFileRoute, Navigate, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
-import { useMe, formatNaira, formatMoney, useOnHold } from "@/lib/hooks";
+import { useMe, formatMoney, useOnHold } from "@/lib/hooks";
+import { fetchCashoutHistory } from "@/lib/cashout-history";
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { walletFromNote, shortAddress } from "@/lib/crypto";
@@ -40,10 +42,14 @@ function WalletPage() {
       (await supabase.from("user_wallets").select("*").eq("user_id", me!.user.id).order("created_at", { ascending: false })).data ?? [],
   });
   const { data: hold = 0 } = useOnHold(me?.user.id);
-  const { data: tx = [] } = useQuery({
-    queryKey: ["my-tx", me?.user.id],
+  const userId = me?.user.id;
+  const { data: tx = [], isPending: historyLoading, isError: historyError, refetch: retryHistory } = useQuery({
+    queryKey: ["my-tx", userId, "cashout"],
     enabled: !!me?.user.id,
-    queryFn: async () => (await supabase.from("mock_transactions").select("*").eq("user_id", me!.user.id).order("created_at", { ascending: false }).limit(20)).data ?? [],
+    queryFn: async () => {
+      if (!userId) return [];
+      return fetchCashoutHistory(userId);
+    },
   });
   if (!me) return me === null ? <Navigate to="/auth" /> : null;
   const p = me.profile;
@@ -90,22 +96,32 @@ function WalletPage() {
 
       <section className="mt-4 bg-card border border-border rounded-xl p-4">
         <div className="font-semibold mb-2">Transaction History</div>
-        {tx.length === 0 ? (
-          <div className="py-8 text-center text-sm text-muted-foreground"><Inbox className="w-8 h-8 mx-auto mb-2 opacity-40" />No transactions yet.</div>
+        {historyError ? (
+          <div role="alert" className="py-8 text-center text-sm text-destructive">
+            <p>Could not load deposit and withdrawal history.</p>
+            <Button variant="outline" size="sm" className="mt-3" onClick={() => retryHistory()}>Try again</Button>
+          </div>
+        ) : historyLoading ? (
+          <div role="status" className="py-8 text-center text-sm text-muted-foreground">Loading transactions…</div>
+        ) : tx.length === 0 ? (
+          <div className="py-8 text-center text-sm text-muted-foreground"><Inbox className="w-8 h-8 mx-auto mb-2 opacity-40" />No deposits or withdrawals yet.</div>
         ) : (
           <ul className="divide-y divide-border">
-            {tx.map((t) => (
+            {tx.map((t) => {
+              const address = walletFromNote(t.note);
+              return (
               <li key={t.id} className="flex items-center justify-between py-2.5 text-sm">
                 <div className="min-w-0">
                   <div className="font-medium capitalize">{t.kind}</div>
-                  {walletFromNote(t.note) && (
-                    <div className="text-[11px] font-mono text-muted-foreground truncate">{shortAddress(walletFromNote(t.note)!)}</div>
+                  {address && (
+                    <div className="text-[11px] font-mono text-muted-foreground truncate">{shortAddress(address)}</div>
                   )}
                   <div className="text-[11px] text-muted-foreground">{new Date(t.created_at).toLocaleString()}</div>
                 </div>
-                <span className="font-semibold">{formatNaira(t.amount)}</span>
+                <span className="font-semibold">{formatMoney(t.amount)}</span>
               </li>
-            ))}
+              );
+            })}
           </ul>
         )}
       </section>
