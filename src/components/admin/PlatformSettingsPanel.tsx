@@ -17,6 +17,7 @@ import {
 } from "@/lib/settings";
 import { Loader2, Music2, Trash2, Upload } from "lucide-react";
 import { EventsRewardsEditor, MembershipChartEditor } from "@/components/admin/EventsRewardsEditor";
+import { SupportContactEditor } from "@/components/admin/SupportContactEditor";
 
 type RowKey =
   | "maintenance" | "registrations" | "bonuses" | "wallets" | "whatsapp" | "telegram"
@@ -45,8 +46,6 @@ export function PlatformSettingsPanel() {
   const [registrations, setRegistrations] = useState(true);
   const [text, setText] = useState<Record<string, string>>({
     bonuses: "Welcome bonus: $10 · Trial group: Normal (30 tracks)",
-    whatsapp: "+1 555 000 1234",
-    telegram: "@soundcampaign_support",
     events: "Salary earning: Working days 5 $800 · Working days 15 $1,500 · Working days 30 $3,800",
     testimonials: "12 testimonial photos published",
     licenses: "Business license, award certificate, registration certificate",
@@ -98,7 +97,8 @@ export function PlatformSettingsPanel() {
                   {r.key === "wallets" && <DepositWallets />}
                   {r.key === "trending" && <TrendingSongsEditor />}
                   {r.key === "events" && <EventsRewardsEditor />}
-                  {!["maintenance", "registrations", "activities", "wallets", "trending", "events"].includes(r.key) && (
+                  {(r.key === "whatsapp" || r.key === "telegram") && <SupportContactEditor channel={r.key} />}
+                  {!["maintenance", "registrations", "activities", "wallets", "trending", "events", "whatsapp", "telegram"].includes(r.key) && (
                     <div className="space-y-2">
                       <Textarea rows={3} value={text[r.key] ?? ""} onChange={(e) => setText((p) => ({ ...p, [r.key]: e.target.value }))} />
                       <Button size="sm" onClick={() => toast.success(`${r.title} saved`)}>Save</Button>

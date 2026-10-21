@@ -6,11 +6,12 @@ import { BarChart3, Star, TrendingUp, TrendingDown, Headphones, Activity, Shield
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MessageCircle, Phone, Send } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { AUDIO_URL, POSTERS, ARTISTS, WORDS } from "@/lib/warehouse";
 import { useTrendingSongs } from "@/lib/settings";
 import { useStickyTier } from "@/lib/tier";
 import { WelcomeBonus } from "@/components/WelcomeBonus";
+import { SupportContactLinks } from "@/components/SupportContactLinks";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   beforeLoad: () => requireUserPanel(),
@@ -150,16 +151,7 @@ function Dashboard() {
               <span className="w-10 h-10 rounded-full grid place-items-center bg-[var(--nrc-green)] text-white"><MessageCircle className="w-5 h-5" /></span>
               <div><div className="font-semibold">Live Chat</div><div className="text-xs text-muted-foreground">Chat with an agent in-app</div></div>
             </a>
-            <a href="https://wa.me/15551234567" target="_blank" rel="noreferrer"
-              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted">
-              <span className="w-10 h-10 rounded-full grid place-items-center bg-emerald-500 text-white"><Phone className="w-5 h-5" /></span>
-              <div><div className="font-semibold">WhatsApp</div><div className="text-xs text-muted-foreground">+1 (555) 123-4567</div></div>
-            </a>
-            <a href="https://t.me/soundcampaign_support" target="_blank" rel="noreferrer"
-              className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted">
-              <span className="w-10 h-10 rounded-full grid place-items-center bg-sky-500 text-white"><Send className="w-5 h-5" /></span>
-              <div><div className="font-semibold">Telegram</div><div className="text-xs text-muted-foreground">@soundcampaign_support</div></div>
-            </a>
+            <SupportContactLinks />
           </div>
         </DialogContent>
       </Dialog>
