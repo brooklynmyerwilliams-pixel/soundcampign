@@ -14,7 +14,7 @@ export const saveSupportContact = createServerFn({ method: "POST" })
       p_remove: data.remove,
     });
     if (error) {
-      if (error.code === "40001") throw new Error("This contact changed in another session. Reload the saved value before trying again.");
+      if (error.code === "P0001") throw new Error("This contact changed in another session. Reload the saved value before trying again.");
       if (error.code === "42501") throw new Error("Only administrators can change support contacts.");
       if (error.code === "22023") throw new Error("Invalid contact details. Saved contacts have not changed.");
       throw new Error("Could not save contact details. Please try again.");

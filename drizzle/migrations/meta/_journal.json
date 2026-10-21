@@ -36,6 +36,13 @@
       "when": 1792552110954,
       "tag": "0004_support_contact_explicit_removal",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792552745912,
+      "tag": "0005_support_contact_conflict_errors",
+      "breakpoints": true
     }
   ]
 }
