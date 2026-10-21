@@ -7,9 +7,8 @@ import { useMyChat, useChatRealtime, sendChatMessage, markThreadRead } from "@/l
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ChatMessageBody } from "@/components/ChatMessageBody";
-
-const WHATSAPP_NUMBER = "12025550147"; // digits only, no +
-const TELEGRAM_USERNAME = "soundcampaign_support";
+import { SupportContactLinks } from "@/components/SupportContactLinks";
+import { useSupportContactsRealtime } from "@/lib/support-contacts";
 
 type Attachment = { name: string; type: string; url?: string };
 type ChatMsg = { id: string; from: "user" | "agent"; text: string; files?: Attachment[] };
@@ -44,6 +43,7 @@ function DoubleChatIcon({ className }: { className?: string }) {
 export function SupportWidget() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const qc = useQueryClient();
+  useSupportContactsRealtime();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<"menu" | "chat">("menu");
   const [input, setInput] = useState("");
@@ -154,35 +154,7 @@ export function SupportWidget() {
                 </span>
               </button>
 
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center gap-3 rounded-xl border border-border p-3 hover:bg-accent transition-colors"
-              >
-                <span className="w-9 h-9 rounded-full bg-[#25D366]/15 text-[#128C7E] flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4" />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-sm font-medium">WhatsApp</span>
-                  <span className="block text-xs text-muted-foreground">Message us on WhatsApp</span>
-                </span>
-              </a>
-
-              <a
-                href={`https://t.me/${TELEGRAM_USERNAME}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center gap-3 rounded-xl border border-border p-3 hover:bg-accent transition-colors"
-              >
-                <span className="w-9 h-9 rounded-full bg-[#229ED9]/15 text-[#229ED9] flex items-center justify-center">
-                  <Send className="w-4 h-4" />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-sm font-medium">Telegram</span>
-                  <span className="block text-xs text-muted-foreground">Chat on Telegram</span>
-                </span>
-              </a>
+              <SupportContactLinks />
             </div>
           ) : (
             <div className="flex flex-col h-[320px]">
