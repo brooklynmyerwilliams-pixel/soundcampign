@@ -614,7 +614,6 @@ function Overview({ onOpenThread }: { onOpenThread: (id: string) => void }) {
       const allUsers = users.data ?? [];
       const realUsers = allUsers.filter((u) => !u.is_training);
       const realIds = new Set(realUsers.map((u) => u.id));
-      const balance = allUsers.reduce((s, u) => s + Number(u.balance ?? 0), 0);
       // Only pending deposits/withdrawals/upgrades from REAL users
       const recent = (txs.data ?? []).filter((t) => realIds.has(t.user_id));
       // Real users currently on a negative balance
@@ -623,7 +622,6 @@ function Overview({ onOpenThread }: { onOpenThread: (id: string) => void }) {
         .map((u) => ({ id: u.id, name: u.display_name || u.username, balance: Number(u.balance) }));
       return {
         totalUsers: users.count ?? 0,
-        totalBalance: balance,
         totalAnns: anns.count ?? 0,
         pending: recent.length,
         recent,
@@ -634,7 +632,6 @@ function Overview({ onOpenThread }: { onOpenThread: (id: string) => void }) {
 
   const stats = [
     { label: "Total Users",      value: data?.totalUsers ?? "—", icon: Users },
-    { label: "Wallet Balance",   value: formatNaira(data?.totalBalance ?? 0), icon: CreditCard },
     { label: "Pending Payments", value: data?.pending ?? "—", icon: ArrowUpCircle },
     { label: "VIP Plans",        value: MEMBERSHIP_TIERS.length, icon: Settings },
   ];
@@ -651,7 +648,7 @@ function Overview({ onOpenThread }: { onOpenThread: (id: string) => void }) {
         <h1 className="text-2xl font-bold">Overview</h1>
         <p className="text-sm text-muted-foreground">Snapshot of platform activity.</p>
       </div>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         {stats.map((s) => (
           <div key={s.label} className="bg-card border border-border rounded-xl p-4">
             <div className="flex items-center justify-between">
