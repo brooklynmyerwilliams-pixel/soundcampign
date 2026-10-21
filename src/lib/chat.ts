@@ -126,3 +126,27 @@ export async function markThreadRead(userId: string, side: "admin" | "user") {
     .eq("user_id", userId)
     .eq("sender", side === "admin" ? "user" : "admin");
 }
+
+/** Toggle a message id in a selection list (pure helper for the admin delete UI). */
+export function toggleMessageSelection(selected: string[], id: string): string[] {
+  return selected.includes(id) ? selected.filter((s) => s !== id) : [...selected, id];
+}
+
+/** Admin: delete specific messages by id. */
+export async function deleteChatMessages(ids: string[]) {
+  if (!ids.length) return;
+  const { error } = await supabase.from("support_messages").delete().in("id", ids);
+  if (error) throw error;
+}
+
+/** Admin: delete an entire conversation thread. */
+export async function deleteChatThread(userId: string) {
+  const { error } = await supabase.from("support_messages").delete().eq("user_id", userId);
+  if (error) throw error;
+}
+
+/** Admin: delete every support message. */
+export async function deleteAllChats() {
+  const { error } = await supabase.from("support_messages").delete().not("id", "is", null);
+  if (error) throw error;
+}
