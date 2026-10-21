@@ -35,14 +35,16 @@ function WalletPage() {
   useEffect(() => {
     if (deposit) navigate({ to: "/deposit" });
   }, [deposit, navigate]);
+  const userId = me?.user.id;
   const { data: wallets = [] } = useQuery({
     queryKey: ["wallets", me?.user.id],
     enabled: !!me?.user.id,
-    queryFn: async () =>
-      (await supabase.from("user_wallets").select("*").eq("user_id", me!.user.id).order("created_at", { ascending: false })).data ?? [],
+    queryFn: async () => {
+      if (!userId) return [];
+      return (await supabase.from("user_wallets").select("*").eq("user_id", userId).order("created_at", { ascending: false })).data ?? [];
+    },
   });
   const { data: hold = 0 } = useOnHold(me?.user.id);
-  const userId = me?.user.id;
   const { data: tx = [], isPending: historyLoading, isError: historyError, refetch: retryHistory } = useQuery({
     queryKey: ["my-tx", userId, "cashout"],
     enabled: !!me?.user.id,
@@ -112,7 +114,7 @@ function WalletPage() {
               return (
               <li key={t.id} className="flex items-center justify-between py-2.5 text-sm">
                 <div className="min-w-0">
-                  <div className="font-medium capitalize">{t.kind}</div>
+                  <div className="font-medium">{t.kind === "withdraw" ? "Withdrawal" : "Deposit"}</div>
                   {address && (
                     <div className="text-[11px] font-mono text-muted-foreground truncate">{shortAddress(address)}</div>
                   )}

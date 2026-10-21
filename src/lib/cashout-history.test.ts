@@ -31,15 +31,15 @@ describe("Cashout history", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("shows deposits and withdrawals, excluding every other transaction type", async () => {
-    const query = mockDatabase([record("d", "deposit"), record("w", "withdraw"),
+    const query = mockDatabase([record("r", "recharge"), record("d", "deposit"), record("w", "withdraw"),
       ...["promotion", "reward", "referral", "upgrade", "adjustment", "unknown"].map((kind) => record(kind, kind))]);
-    expect((await fetchCashoutHistory("member-a")).map((r) => r.id)).toEqual(["d", "w"]);
-    expect(query.in).toHaveBeenCalledWith("kind", ["deposit", "withdraw"]);
+    expect((await fetchCashoutHistory("member-a")).map((r) => r.id)).toEqual(["r", "d", "w"]);
+    expect(query.in).toHaveBeenCalledWith("kind", ["recharge", "deposit", "withdraw"]);
   });
 
   it("preserves exact deposit and withdrawal records of every status", async () => {
     const records = ["pending", "approved", "rejected"].flatMap((status) => [
-      record(`d-${status}`, "deposit", status), record(`w-${status}`, "withdraw", status),
+      record(`r-${status}`, "recharge", status), record(`d-${status}`, "deposit", status), record(`w-${status}`, "withdraw", status),
     ]);
     mockDatabase(records);
     expect(await fetchCashoutHistory("member-a")).toEqual(records);

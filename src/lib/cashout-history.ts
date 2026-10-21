@@ -1,7 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-export const CASHOUT_TRANSACTION_KINDS = ["deposit", "withdraw"];
+// Member deposit requests use "recharge"; administrator-entered deposits use "deposit".
+export const CASHOUT_TRANSACTION_KINDS = ["recharge", "deposit", "withdraw"];
 const PAGE_SIZE = 500;
 type Transaction = Database["public"]["Tables"]["mock_transactions"]["Row"];
 
