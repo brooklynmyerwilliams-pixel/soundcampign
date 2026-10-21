@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import { X, MessageCircle, Send, MessagesSquare, ArrowLeft, Paperclip, FileText } from "lucide-react";
+import { X, Send, MessagesSquare, ArrowLeft, Paperclip, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyChat, useChatRealtime, sendChatMessage, markThreadRead } from "@/lib/chat";

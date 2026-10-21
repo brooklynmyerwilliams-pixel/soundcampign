@@ -6,7 +6,7 @@ import { BarChart3, Star, TrendingUp, TrendingDown, Headphones, Activity, Shield
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MessageCircle, Phone, Send } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { AUDIO_URL, POSTERS, ARTISTS, WORDS } from "@/lib/warehouse";
 import { useTrendingSongs } from "@/lib/settings";
 import { useStickyTier } from "@/lib/tier";
