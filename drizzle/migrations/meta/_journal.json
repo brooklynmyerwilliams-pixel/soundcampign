@@ -22,6 +22,13 @@
       "when": 1792418235904,
       "tag": "0002_apply_imported_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792552060061,
+      "tag": "0003_durable_support_contacts",
+      "breakpoints": true
     }
   ]
 }

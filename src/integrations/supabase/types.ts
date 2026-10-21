@@ -154,6 +154,27 @@ export type Database = {
           },
         ]
       }
+      support_contacts: {
+        Row: {
+          channel: string
+          revision: number
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          channel: string
+          revision?: number
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          channel?: string
+          revision?: number
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
       support_messages: {
         Row: {
           attachments: Json
@@ -419,6 +440,26 @@ export type Database = {
         Returns: boolean
       }
       is_registration_invite_valid: { Args: { code: string }; Returns: boolean }
+      save_support_contact: {
+        Args: {
+          p_channel: string
+          p_expected_revision: number
+          p_remove?: boolean
+          p_value: string
+        }
+        Returns: {
+          channel: string
+          revision: number
+          updated_at: string
+          value: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "support_contacts"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       app_role: "admin" | "user"
