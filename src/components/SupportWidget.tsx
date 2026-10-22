@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import { ChatMessageBody } from "@/components/ChatMessageBody";
 import { SupportContactLinks } from "@/components/SupportContactLinks";
 import { useSupportContactsRealtime } from "@/lib/support-contacts";
+import { ReadTicks } from "@/components/ReadTicks";
 
 type Attachment = { name: string; type: string; url?: string };
-type ChatMsg = { id: string; from: "user" | "agent"; text: string; files?: Attachment[] };
+type ChatMsg = { id: string; from: "user" | "agent"; text: string; files?: Attachment[]; seen?: boolean };
 
 
 function DoubleChatIcon({ className }: { className?: string }) {
@@ -74,6 +75,7 @@ export function SupportWidget() {
       from: (m.sender === "admin" ? "agent" : "user") as "user" | "agent",
       text: m.body,
       files: m.attachments,
+      seen: m.read_by_admin,
     })),
   ];
 
@@ -194,6 +196,11 @@ export function SupportWidget() {
                           </div>
                         ))}
 
+                      </div>
+                    )}
+                    {m.from === "user" && (
+                      <div className="flex justify-end mt-0.5 opacity-80">
+                        <ReadTicks seen={!!m.seen} />
                       </div>
                     )}
                   </div>
