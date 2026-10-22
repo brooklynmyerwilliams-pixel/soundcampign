@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MessageCircle, Paperclip, Trash2, CheckSquare, X } from "lucide-react";
 import { ChatReplyComposer } from "@/components/admin/ChatReplyComposer";
 import { ChatMessageBody } from "@/components/ChatMessageBody";
+import { ReadTicks } from "@/components/ReadTicks";
 import {
   useAllChats,
   useChatRealtime,
@@ -194,7 +195,10 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
                       <Paperclip className="w-3 h-3" /> {a.name}
                     </div>
                   ))}
-                  <div className="text-[10px] opacity-70 mt-1">{new Date(m.created_at).toLocaleString()}</div>
+                  <div className="text-[10px] opacity-70 mt-1 flex items-center justify-end gap-1">
+                    <span>{new Date(m.created_at).toLocaleString()}</span>
+                    {m.sender === "admin" && <ReadTicks seen={m.read_by_user} />}
+                  </div>
                 </div>
               );
               return selecting ? (
