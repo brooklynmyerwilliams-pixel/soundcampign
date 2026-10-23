@@ -440,6 +440,7 @@ export type Database = {
         Returns: boolean
       }
       is_registration_invite_valid: { Args: { code: string }; Returns: boolean }
+      is_restricted_admin: { Args: { _user_id: string }; Returns: boolean }
       save_support_contact: {
         Args: {
           p_channel: string
