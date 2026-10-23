@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { setViewAsId } from "@/lib/hooks";
+import { useAdminReadOnly } from "@/lib/admin-permissions";
 import { LEVEL_FOR_TIER_INDEX, WAREHOUSE_GROUPS, WAREHOUSE_TIERS, groupLabelForSeed, groupSeedFromNote, makeSongs, premiumSongs, stickyTier, stickyTierIndex, tierIndexForLevel } from "@/lib/warehouse";
 import { useWarehouseSongs } from "@/lib/settings";
 import { useExclusiveTasks, useTaskSettings } from "@/lib/exclusive";
@@ -144,6 +145,7 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
+  const readOnly = useAdminReadOnly();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);
@@ -343,11 +345,12 @@ function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4 mr-1" /> Edit</Button>
-        <Button variant="outline" size="sm" onClick={() => setFundsOpen(true)}><DollarSign className="w-4 h-4 mr-1" /> Funds</Button>
         <Button variant="outline" size="sm" className="text-[var(--nrc-green)]" onClick={viewAsUser}>
           <LogIn className="w-4 h-4 mr-1" /> View as User
         </Button>
+        {!readOnly && (<>
+        <Button variant="outline" size="sm" onClick={() => setEditOpen(true)}><Pencil className="w-4 h-4 mr-1" /> Edit</Button>
+        <Button variant="outline" size="sm" onClick={() => setFundsOpen(true)}><DollarSign className="w-4 h-4 mr-1" /> Funds</Button>
         <Button variant="outline" size="sm" className={user.suspended ? "text-[var(--nrc-green)]" : "text-destructive"}
           onClick={() => suspend.mutate(!user.suspended)} disabled={suspend.isPending}>
           <Ban className="w-4 h-4 mr-1" /> {user.suspended ? "Unsuspend" : "Suspend"}
@@ -401,9 +404,11 @@ function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
             })}
           </DropdownMenuContent>
         </DropdownMenu>
+        </>)}
       </div>
 
 
+      {!readOnly && (<>
       <EditUserDialog user={user} open={editOpen} onClose={() => setEditOpen(false)} />
       <FundsDialog user={user} onHold={onHold} open={fundsOpen} onClose={() => setFundsOpen(false)} />
       <LevelDialog user={user} open={levelOpen} onClose={() => setLevelOpen(false)} submittedCount={submittedCount} />
@@ -416,6 +421,7 @@ function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
 
       <DeleteDialog user={user} open={deleteOpen} onClose={() => setDeleteOpen(false)} onDeleted={onBack} />
       <RewardDialog user={user} open={rewardOpen} onClose={() => setRewardOpen(false)} />
+      </>)}
 
 
     </div>

@@ -162,6 +162,7 @@ function SongWarehouse() {
   const [editing, setEditing] = useState<{ key: string; song: Song } | null>(null);
   const [songMap, setSongMap] = useState<Record<string, Song[]>>({});
   const { data: savedMap } = useWarehouseSongs();
+  const readOnly = useAdminReadOnly();
 
   // Load persisted warehouse songs (admin edits) once fetched; local edits win.
   useEffect(() => {
@@ -170,6 +171,7 @@ function SongWarehouse() {
 
   /** Persist the whole map so price edits reach the exclusive-task dialog instantly. */
   const persistMap = (m: Record<string, Song[]>) => {
+    if (readOnly) return;
     saveWarehouseSongs(m).catch((e: any) => toast.error(e?.message ?? "Couldn't save warehouse"));
   };
   const [bulk, setBulk] = useState<{ key: string; label: string; songs: Song[]; targets: number[] } | null>(null);
@@ -263,14 +265,14 @@ function SongWarehouse() {
           </div>
         </div>
         <div className="flex justify-end gap-2">
-          <Button size="sm" variant="outline"
+          {!readOnly && <Button size="sm" variant="outline"
             onClick={() => {
               if (selectedSongs.length === 0) return toast.error("Select songs first — use Select all, First N, Random N, or tap songs");
               const targets = songs.map((s, i) => (selected.includes(s.id) ? i : -1)).filter((i) => i >= 0);
               setBulk({ key: k, label, songs, targets });
             }}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Bulk upload ({selected.length})
-          </Button>
+          </Button>}
           <Button size="sm" variant="outline"
             onClick={async () => {
               if (selectedSongs.length === 0) return toast.error("Select songs first — use Select all, First N, Random N, or tap songs");
@@ -353,6 +355,7 @@ function SongWarehouse() {
             onClick={(e) => { e.stopPropagation(); const a = new Audio(s.audio); a.play().catch(() => {}); }}>
             ▶
           </Button>
+          {!readOnly && (<>
           <Button size="sm" variant="ghost" className="flex-1 h-8"
             onClick={(e) => { e.stopPropagation(); setEditing({ key: k, song: s }); }}>
             <Edit3 className="h-3.5 w-3.5" />
@@ -361,6 +364,7 @@ function SongWarehouse() {
             onClick={(e) => { e.stopPropagation(); deleteSong(k, s.id); }}>
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
+          </>)}
         </div>
       </div>
     </div>
