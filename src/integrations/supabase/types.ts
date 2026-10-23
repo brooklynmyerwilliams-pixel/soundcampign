@@ -440,6 +440,7 @@ export type Database = {
         Returns: boolean
       }
       is_registration_invite_valid: { Args: { code: string }; Returns: boolean }
+      is_restricted_admin: { Args: { _user_id: string }; Returns: boolean }
       save_support_contact: {
         Args: {
           p_channel: string
@@ -462,7 +463,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "super_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -590,7 +591,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "super_admin"],
     },
   },
 } as const

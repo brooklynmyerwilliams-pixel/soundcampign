@@ -7,7 +7,8 @@ import { UPGRADE_KIND, parseUpgradeNote } from "@/lib/upgrade";
 import { adjustBalance } from "@/lib/balance";
 import { walletFromNote, shortAddress, noteText } from "@/lib/crypto";
 import { useServerFn } from "@tanstack/react-start";
-import { createAdminAccount } from "@/lib/admin.functions";
+import { AdminReadOnlyContext, useAdminReadOnly, canOpenSection } from "@/lib/admin-permissions";
+import { createAdminAccount, setAdminRole } from "@/lib/admin.functions";
 import { makeSongs, premiumSongs, WAREHOUSE_TIERS as MEMBERSHIP_TIERS, type Song } from "@/lib/warehouse";
 import { useWarehouseSongs, saveWarehouseSongs } from "@/lib/settings";
 
@@ -77,6 +78,9 @@ const MENU: { key: Section; title: string; icon: typeof LayoutDashboard }[] = [
 function AdminPage() {
   const { data: me, isLoading } = useMe();
   const [section, setSection] = useState<Section>("overview");
+  const isSuper = !!me?.isSuperAdmin;
+  const menu = MENU.filter((m) => canOpenSection(isSuper, m.key));
+  const shown: Section = canOpenSection(isSuper, section) ? section : "users";
   const [chatThreadId, setChatThreadId] = useState<string | null>(null);
 
   if (isLoading) return <div className="p-8 text-center">Loading…</div>;
@@ -98,7 +102,7 @@ function AdminPage() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <AdminSidebar section={section} setSection={setSection} />
+        <AdminSidebar section={shown} setSection={setSection} menu={menu} />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 flex items-center border-b border-border bg-card px-4 sticky top-0 z-10">
             <SidebarTrigger className="mr-3" />
@@ -116,19 +120,26 @@ function AdminPage() {
             </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-auto">
-            {section === "overview"      && (
+            <AdminReadOnlyContext.Provider value={!isSuper}>
+            {!isSuper && (
+              <div className="mb-4 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+                Read-only admin access — you can view records and use "View as User", but cannot add, edit or delete anything.
+              </div>
+            )}
+            {shown === "overview"      && (
               <Overview onOpenThread={(id) => { setChatThreadId(id); setSection("chat"); }} />
             )}
-            {section === "users"         && <UserManagement />}
+            {shown === "users"         && <UserManagement />}
             
-            {section === "warehouse"     && <SongWarehouse />}
-            {section === "training"      && <TrainingAccounts />}
-            {section === "payments"      && <Payments />}
-            {section === "upgrades"      && <Upgrades />}
-            {section === "admins"        && <ManageAdmins />}
-            {section === "settings"      && <PlatformSettingsPanel />}
-            {section === "chat"          && <LiveChat key={chatThreadId ?? "default"} initialThreadId={chatThreadId} />}
-            {section === "announcements" && <Announcements />}
+            {shown === "warehouse"     && <SongWarehouse />}
+            {shown === "training"      && <TrainingAccounts />}
+            {shown === "payments"      && <Payments />}
+            {shown === "upgrades"      && <Upgrades />}
+            {shown === "admins"        && <ManageAdmins />}
+            {shown === "settings"      && <PlatformSettingsPanel />}
+            {shown === "chat"          && <LiveChat key={chatThreadId ?? "default"} initialThreadId={chatThreadId} />}
+            {shown === "announcements" && <Announcements />}
+            </AdminReadOnlyContext.Provider>
           </main>
         </div>
       </div>
@@ -151,6 +162,7 @@ function SongWarehouse() {
   const [editing, setEditing] = useState<{ key: string; song: Song } | null>(null);
   const [songMap, setSongMap] = useState<Record<string, Song[]>>({});
   const { data: savedMap } = useWarehouseSongs();
+  const readOnly = useAdminReadOnly();
 
   // Load persisted warehouse songs (admin edits) once fetched; local edits win.
   useEffect(() => {
@@ -159,6 +171,7 @@ function SongWarehouse() {
 
   /** Persist the whole map so price edits reach the exclusive-task dialog instantly. */
   const persistMap = (m: Record<string, Song[]>) => {
+    if (readOnly) return;
     saveWarehouseSongs(m).catch((e: any) => toast.error(e?.message ?? "Couldn't save warehouse"));
   };
   const [bulk, setBulk] = useState<{ key: string; label: string; songs: Song[]; targets: number[] } | null>(null);
@@ -252,14 +265,14 @@ function SongWarehouse() {
           </div>
         </div>
         <div className="flex justify-end gap-2">
-          <Button size="sm" variant="outline"
+          {!readOnly && <Button size="sm" variant="outline"
             onClick={() => {
               if (selectedSongs.length === 0) return toast.error("Select songs first — use Select all, First N, Random N, or tap songs");
               const targets = songs.map((s, i) => (selected.includes(s.id) ? i : -1)).filter((i) => i >= 0);
               setBulk({ key: k, label, songs, targets });
             }}>
             <Plus className="h-3.5 w-3.5 mr-1" /> Bulk upload ({selected.length})
-          </Button>
+          </Button>}
           <Button size="sm" variant="outline"
             onClick={async () => {
               if (selectedSongs.length === 0) return toast.error("Select songs first — use Select all, First N, Random N, or tap songs");
@@ -342,6 +355,7 @@ function SongWarehouse() {
             onClick={(e) => { e.stopPropagation(); const a = new Audio(s.audio); a.play().catch(() => {}); }}>
             ▶
           </Button>
+          {!readOnly && (<>
           <Button size="sm" variant="ghost" className="flex-1 h-8"
             onClick={(e) => { e.stopPropagation(); setEditing({ key: k, song: s }); }}>
             <Edit3 className="h-3.5 w-3.5" />
@@ -350,6 +364,7 @@ function SongWarehouse() {
             onClick={(e) => { e.stopPropagation(); deleteSong(k, s.id); }}>
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
+          </>)}
         </div>
       </div>
     </div>
@@ -536,7 +551,7 @@ function EditSongDialog({
   );
 }
 
-function AdminSidebar({ section, setSection }: { section: Section; setSection: (s: Section) => void }) {
+function AdminSidebar({ section, setSection, menu }: { section: Section; setSection: (s: Section) => void; menu: typeof MENU }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
@@ -556,7 +571,7 @@ function AdminSidebar({ section, setSection }: { section: Section; setSection: (
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {MENU.map((item) => {
+              {menu.map((item) => {
                 const active = section === item.key;
                 return (
                   <SidebarMenuItem key={item.key}>
@@ -1069,16 +1084,41 @@ function Upgrades() {
 function ManageAdmins() {
   const [editing, setEditing] = useState<any>(null);
   const [creating, setCreating] = useState(false);
+  const [promoteQ, setPromoteQ] = useState("");
+  const qc = useQueryClient();
+  const setRole = useServerFn(setAdminRole);
   const { data: admins = [] } = useQuery({
     queryKey: ["admin-list"],
     queryFn: async () => {
-      const { data: roles } = await supabase.from("user_roles").select("user_id, role").eq("role", "admin");
-      const ids = (roles ?? []).map((r) => r.user_id);
+      const { data: roles } = await supabase.from("user_roles").select("user_id, role").in("role", ["admin", "super_admin"]);
+      const supers = new Set((roles ?? []).filter((r) => r.role === "super_admin").map((r) => r.user_id));
+      const ids = [...new Set((roles ?? []).map((r) => r.user_id))];
       if (ids.length === 0) return [];
       const { data: profs } = await supabase.from("profiles").select("*").in("id", ids);
-      return profs ?? [];
+      return (profs ?? []).map((p) => ({ ...p, isSuper: supers.has(p.id) }));
     },
   });
+  const { data: candidates = [] } = useQuery({
+    queryKey: ["admin-promote-search", promoteQ],
+    enabled: promoteQ.trim().length >= 2,
+    queryFn: async () => {
+      const q = promoteQ.trim().replace(/[%,()]/g, "");
+      const { data } = await supabase.from("profiles").select("id, username, display_name")
+        .or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(8);
+      return data ?? [];
+    },
+  });
+  const changeRole = useMutation({
+    mutationFn: (v: { userId: string; makeAdmin: boolean }) => setRole({ data: v }),
+    onSuccess: (_r, v) => {
+      toast.success(v.makeAdmin ? "User promoted to Admin" : "Admin access removed");
+      setPromoteQ("");
+      qc.invalidateQueries({ queryKey: ["admin-list"] });
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not change role"),
+  });
+  const adminIds = new Set(admins.map((a: any) => a.id));
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
@@ -1087,6 +1127,19 @@ function ManageAdmins() {
           <p className="text-sm text-muted-foreground">Accounts with administrator role.</p>
         </div>
         <Button size="sm" onClick={() => setCreating(true)}><Plus className="w-4 h-4 mr-1" /> New Admin</Button>
+      </div>
+      <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+        <Label>Promote an existing user to Admin</Label>
+        <Input placeholder="Search by username or name…" value={promoteQ} onChange={(e) => setPromoteQ(e.target.value)} />
+        {candidates.filter((c: any) => !adminIds.has(c.id)).map((c: any) => (
+          <div key={c.id} className="flex items-center justify-between gap-2 text-sm">
+            <span className="truncate">{c.display_name || c.username} <span className="text-muted-foreground">@{c.username}</span></span>
+            <Button size="sm" disabled={changeRole.isPending}
+              onClick={() => { if (confirm(`Make ${c.username} a read-only Admin?`)) changeRole.mutate({ userId: c.id, makeAdmin: true }); }}>
+              Make Admin
+            </Button>
+          </div>
+        ))}
       </div>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         {admins.length === 0
@@ -1104,8 +1157,14 @@ function ManageAdmins() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge className="bg-[var(--nrc-gold)] text-[var(--nrc-green-dark)]">Admin</Badge>
+                    <Badge className="bg-[var(--nrc-gold)] text-[var(--nrc-green-dark)]">{a.isSuper ? "Super Admin" : "Admin"}</Badge>
                     <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
+                    {!a.isSuper && (
+                      <Button size="sm" variant="outline" className="text-destructive" disabled={changeRole.isPending}
+                        onClick={() => { if (confirm(`Remove admin access from ${a.username}?`)) changeRole.mutate({ userId: a.id, makeAdmin: false }); }}>
+                        Remove Admin
+                      </Button>
+                    )}
                   </div>
                 </li>
               ))}

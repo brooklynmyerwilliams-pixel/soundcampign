@@ -10,12 +10,22 @@ async function assertAdmin(context: { supabase: any; userId: string }) {
   if (!isAdmin) throw new Error("Forbidden");
 }
 
+/** Only the Super Admin may change data; restricted admins are read-only. */
+async function assertSuperAdmin(context: { supabase: any; userId: string }) {
+  const { data: isSuper, error } = await context.supabase.rpc("has_role", {
+    _user_id: context.userId,
+    _role: "super_admin",
+  });
+  if (error) throw new Error(error.message);
+  if (!isSuper) throw new Error("Forbidden: Super Admin only");
+}
+
 /** Permanently delete a user account (auth user + cascading profile rows). Admin only. */
 export const deleteUserAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { userId: string }) => input)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     if (data.userId === context.userId) throw new Error("You cannot delete your own account");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -40,7 +50,7 @@ export const createTrainingAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: TrainingInput) => input)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -160,7 +170,7 @@ export const updateTrainingAccount = createServerFn({ method: "POST" })
     displayName?: string; phone?: string; balance?: number;
   }) => input)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const authPatch: Record<string, string> = {};
@@ -187,7 +197,7 @@ export const updateTrainingAccount = createServerFn({ method: "POST" })
 export const deleteAllTrainingAccounts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows } = await supabaseAdmin.from("profiles").select("id").eq("is_training", true);
     for (const r of rows ?? []) {
@@ -259,7 +269,7 @@ export const updateUserAccount = createServerFn({ method: "POST" })
     displayName?: string; phone?: string; balance?: number; creditScore?: number;
   }) => input)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const authPatch: Record<string, string> = {};
@@ -292,7 +302,7 @@ export const createAdminAccount = createServerFn({ method: "POST" })
     email: string; password: string; username: string; displayName?: string; phone?: string;
   }) => input)
   .handler(async ({ data, context }) => {
-    await assertAdmin(context);
+    await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -320,4 +330,28 @@ export const createAdminAccount = createServerFn({ method: "POST" })
     if (rErr) throw new Error(rErr.message);
 
     return { ok: true, userId: uid };
+  });
+
+/** Promote an existing user to Admin or remove Admin. Super Admin only. */
+export const setAdminRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string; makeAdmin: boolean }) => input)
+  .handler(async ({ data, context }) => {
+    await assertSuperAdmin(context);
+    if (data.userId === context.userId) throw new Error("You cannot change your own role");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: target } = await supabaseAdmin.from("user_roles")
+      .select("role").eq("user_id", data.userId);
+    if ((target ?? []).some((r) => r.role === "super_admin")) throw new Error("Super Admin roles cannot be changed");
+    if (data.makeAdmin) {
+      if (!(target ?? []).some((r) => r.role === "admin")) {
+        const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: data.userId, role: "admin" });
+        if (error) throw new Error(error.message);
+      }
+    } else {
+      const { error } = await supabaseAdmin.from("user_roles").delete()
+        .eq("user_id", data.userId).eq("role", "admin");
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
   });

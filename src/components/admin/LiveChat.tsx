@@ -3,6 +3,7 @@ import { MessageCircle, Paperclip, Trash2, CheckSquare, X } from "lucide-react";
 import { ChatReplyComposer } from "@/components/admin/ChatReplyComposer";
 import { ChatMessageBody } from "@/components/ChatMessageBody";
 import { ReadTicks } from "@/components/ReadTicks";
+import { useAdminReadOnly } from "@/lib/admin-permissions";
 import {
   useAllChats,
   useChatRealtime,
@@ -34,6 +35,7 @@ type Confirm =
 
 export function LiveChat({ initialThreadId }: { initialThreadId?: string | null }) {
   const qc = useQueryClient();
+  const readOnly = useAdminReadOnly();
   const { data: threads = [], isLoading } = useAllChats();
   useChatRealtime([["support-chat-all"]]);
   const [activeId, setActiveId] = useState<string | null>(initialThreadId ?? null);
@@ -49,7 +51,7 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
   const active = threads.find((t) => t.id === activeId) ?? null;
 
   useEffect(() => {
-    if (active && active.unread > 0) {
+    if (!readOnly && active && active.unread > 0) {
       markThreadRead(active.id, "admin").then(() =>
         qc.invalidateQueries({ queryKey: ["support-chat-all"] }),
       );
@@ -113,7 +115,7 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
           <h1 className="text-2xl font-bold">Live Chat</h1>
           <p className="text-sm text-muted-foreground">Real-time support conversations with users.</p>
         </div>
-        {threads.length > 0 && (
+        {!readOnly && threads.length > 0 && (
           <button
             type="button"
             onClick={() => setConfirm({ kind: "all" })}
@@ -152,7 +154,7 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
           <div className="px-4 py-3 border-b border-border font-semibold flex items-center gap-2">
             <MessageCircle className="w-4 h-4 text-[var(--nrc-gold)]" />
             <span className="min-w-0 flex-1 truncate">{active?.name ?? "No conversation"}</span>
-            {active && !selecting && (
+            {!readOnly && active && !selecting && (
               <>
                 <button
                   type="button"
@@ -235,7 +237,13 @@ export function LiveChat({ initialThreadId }: { initialThreadId?: string | null 
               </button>
             </div>
           ) : (
-            <ChatReplyComposer key={active?.id ?? "empty"} disabled={!active} onSend={send} />
+            readOnly ? (
+              <div className="border-t border-border px-4 py-3 text-center text-xs text-muted-foreground">
+                Read-only access — you can view this conversation but cannot reply.
+              </div>
+            ) : (
+              <ChatReplyComposer key={active?.id ?? "empty"} disabled={!active} onSend={send} />
+            )
           )}
         </div>
       </div>

@@ -33,7 +33,8 @@ export function useMe() {
         supabase.from("profiles").select("*").eq("id", auth.user.id).maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", auth.user.id),
       ]);
-      const isAdmin = !!roles?.some((r) => r.role === "admin");
+      const isAdmin = !!roles?.some((r) => r.role === "admin" || r.role === "super_admin");
+      const isSuperAdmin = !!roles?.some((r) => r.role === "super_admin");
       const viewAsId = getViewAsId();
       if (isAdmin && viewAsId && viewAsId !== auth.user.id) {
         const { data: target } = await supabase.from("profiles").select("*").eq("id", viewAsId).maybeSingle();
@@ -42,11 +43,12 @@ export function useMe() {
             user: { ...auth.user, id: target.id },
             profile: target,
             isAdmin: true,
+            isSuperAdmin,
             viewingAs: target,
           };
         }
       }
-      return { user: auth.user, profile, isAdmin, viewingAs: null };
+      return { user: auth.user, profile, isAdmin, isSuperAdmin, viewingAs: null };
     },
   });
 }
