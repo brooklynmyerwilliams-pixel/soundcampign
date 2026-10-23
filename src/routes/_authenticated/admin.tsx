@@ -7,7 +7,8 @@ import { UPGRADE_KIND, parseUpgradeNote } from "@/lib/upgrade";
 import { adjustBalance } from "@/lib/balance";
 import { walletFromNote, shortAddress, noteText } from "@/lib/crypto";
 import { useServerFn } from "@tanstack/react-start";
-import { createAdminAccount } from "@/lib/admin.functions";
+import { AdminReadOnlyContext, useAdminReadOnly, canOpenSection } from "@/lib/admin-permissions";
+import { createAdminAccount, setAdminRole } from "@/lib/admin.functions";
 import { makeSongs, premiumSongs, WAREHOUSE_TIERS as MEMBERSHIP_TIERS, type Song } from "@/lib/warehouse";
 import { useWarehouseSongs, saveWarehouseSongs } from "@/lib/settings";
 
@@ -77,6 +78,9 @@ const MENU: { key: Section; title: string; icon: typeof LayoutDashboard }[] = [
 function AdminPage() {
   const { data: me, isLoading } = useMe();
   const [section, setSection] = useState<Section>("overview");
+  const isSuper = !!me?.isSuperAdmin;
+  const menu = MENU.filter((m) => canOpenSection(isSuper, m.key));
+  const shown: Section = canOpenSection(isSuper, section) ? section : "users";
   const [chatThreadId, setChatThreadId] = useState<string | null>(null);
 
   if (isLoading) return <div className="p-8 text-center">Loading…</div>;
@@ -98,7 +102,7 @@ function AdminPage() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
-        <AdminSidebar section={section} setSection={setSection} />
+        <AdminSidebar section={shown} setSection={setSection} menu={menu} />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-14 flex items-center border-b border-border bg-card px-4 sticky top-0 z-10">
             <SidebarTrigger className="mr-3" />
@@ -116,19 +120,26 @@ function AdminPage() {
             </div>
           </header>
           <main className="flex-1 p-4 md:p-6 overflow-auto">
-            {section === "overview"      && (
+            <AdminReadOnlyContext.Provider value={!isSuper}>
+            {!isSuper && (
+              <div className="mb-4 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+                Read-only admin access — you can view records and use "View as User", but cannot add, edit or delete anything.
+              </div>
+            )}
+            {shown === "overview"      && (
               <Overview onOpenThread={(id) => { setChatThreadId(id); setSection("chat"); }} />
             )}
-            {section === "users"         && <UserManagement />}
+            {shown === "users"         && <UserManagement />}
             
-            {section === "warehouse"     && <SongWarehouse />}
-            {section === "training"      && <TrainingAccounts />}
-            {section === "payments"      && <Payments />}
-            {section === "upgrades"      && <Upgrades />}
-            {section === "admins"        && <ManageAdmins />}
-            {section === "settings"      && <PlatformSettingsPanel />}
-            {section === "chat"          && <LiveChat key={chatThreadId ?? "default"} initialThreadId={chatThreadId} />}
-            {section === "announcements" && <Announcements />}
+            {shown === "warehouse"     && <SongWarehouse />}
+            {shown === "training"      && <TrainingAccounts />}
+            {shown === "payments"      && <Payments />}
+            {shown === "upgrades"      && <Upgrades />}
+            {shown === "admins"        && <ManageAdmins />}
+            {shown === "settings"      && <PlatformSettingsPanel />}
+            {shown === "chat"          && <LiveChat key={chatThreadId ?? "default"} initialThreadId={chatThreadId} />}
+            {shown === "announcements" && <Announcements />}
+            </AdminReadOnlyContext.Provider>
           </main>
         </div>
       </div>
@@ -536,7 +547,7 @@ function EditSongDialog({
   );
 }
 
-function AdminSidebar({ section, setSection }: { section: Section; setSection: (s: Section) => void }) {
+function AdminSidebar({ section, setSection, menu }: { section: Section; setSection: (s: Section) => void; menu: typeof MENU }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
@@ -556,7 +567,7 @@ function AdminSidebar({ section, setSection }: { section: Section; setSection: (
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {MENU.map((item) => {
+              {menu.map((item) => {
                 const active = section === item.key;
                 return (
                   <SidebarMenuItem key={item.key}>
