@@ -64,6 +64,13 @@
       "when": 1792751683675,
       "tag": "0008_restricted_admin_read_only",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792752699294,
+      "tag": "0009_restricted_admin_owned_training",
+      "breakpoints": true
     }
   ]
 }

@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Trash2, Edit3, UserCog, Hash, Users } from "lucide-react";
 import { toast } from "sonner";
+import { UserDetail } from "@/components/admin/UserManagement";
+import { Settings2 } from "lucide-react";
 import { WAREHOUSE_TIERS, LEVEL_FOR_TIER_INDEX, tierIndexForLevel } from "@/lib/warehouse";
 
 type Row = Awaited<ReturnType<typeof listTrainingAccounts>>[number];
@@ -34,9 +36,11 @@ export function TrainingAccounts() {
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ["training-accounts"],
     queryFn: () => list({ data: undefined as never }),
+    refetchInterval: 4000,
   });
 
   const [open, setOpen] = useState(false);
+  const [managing, setManaging] = useState<string | null>(null);
   const [editing, setEditing] = useState<Row | null>(null);
   const [form, setForm] = useState({ ...blank });
   const set = (k: keyof typeof blank, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -94,6 +98,9 @@ export function TrainingAccounts() {
     onSuccess: () => { toast.success("All training accounts deleted"); refresh(); },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  const managed = rows.find((r) => r.id === managing);
+  if (managed) return <UserDetail user={managed} onBack={() => { setManaging(null); refresh(); }} />;
 
   return (
     <div className="space-y-4">
@@ -156,6 +163,9 @@ export function TrainingAccounts() {
               <div className="text-[11px] text-muted-foreground">Balance</div>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" onClick={() => setManaging(r.id)}>
+                <Settings2 className="w-4 h-4 mr-1" /> Manage
+              </Button>
               <Button variant="outline" size="sm" onClick={() => {
                 setEditing(r);
                 setForm({

@@ -20,12 +20,25 @@ async function assertSuperAdmin(context: { supabase: any; userId: string }) {
   if (!isSuper) throw new Error("Forbidden: Super Admin only");
 }
 
+async function isSuperAdmin(context: { supabase: any; userId: string }) {
+  const { data } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "super_admin" });
+  return !!data;
+}
+
+/** Super Admin, or a restricted admin acting on a training account they created. */
+async function assertSuperOrOwner(context: { supabase: any; userId: string }, targetId: string) {
+  await assertAdmin(context);
+  if (await isSuperAdmin(context)) return;
+  const { data } = await context.supabase.rpc("admin_owns_training", { _admin: context.userId, _user: targetId });
+  if (!data) throw new Error("Forbidden: you can only manage training accounts you created");
+}
+
 /** Permanently delete a user account (auth user + cascading profile rows). Admin only. */
 export const deleteUserAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { userId: string }) => input)
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context);
+    await assertSuperOrOwner(context, data.userId);
     if (data.userId === context.userId) throw new Error("You cannot delete your own account");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -50,7 +63,7 @@ export const createTrainingAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: TrainingInput) => input)
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
@@ -87,6 +100,7 @@ export const createTrainingAccount = createServerFn({ method: "POST" })
       vip_level: data.vipLevel ?? 0,
       is_training: true,
       referred_by: referredBy,
+      created_by: context.userId,
     });
     if (upErr) throw new Error(upErr.message);
 
@@ -109,12 +123,14 @@ export const listTrainingAccounts = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
       .from("profiles")
-      .select("id, username, display_name, phone, balance, vip_level, invite_code, referred_by, created_at")
+      .select("*")
       .eq("is_training", true)
       .order("created_at", { ascending: false });
+    const superAdmin = await isSuperAdmin(context);
+    const visible = superAdmin ? rows : (rows ?? []).filter((r) => r.created_by === context.userId);
     if (error) throw new Error(error.message);
 
-    const refIds = [...new Set((rows ?? []).map((r) => r.referred_by).filter(Boolean))] as string[];
+    const refIds = [...new Set((visible ?? []).map((r) => r.referred_by).filter(Boolean))] as string[];
     let refMap: Record<string, string> = {};
     if (refIds.length) {
       const { data: refs } = await supabaseAdmin
@@ -125,7 +141,7 @@ export const listTrainingAccounts = createServerFn({ method: "POST" })
     const { data: emails } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
     const emailMap = Object.fromEntries((emails?.users ?? []).map((u) => [u.id, u.email ?? ""]));
 
-    return (rows ?? []).map((r) => ({
+    return (visible ?? []).map((r) => ({
       ...r,
       email: emailMap[r.id] ?? "",
       referrerName: r.referred_by ? (refMap[r.referred_by] ?? "—") : null,
@@ -170,7 +186,7 @@ export const updateTrainingAccount = createServerFn({ method: "POST" })
     displayName?: string; phone?: string; balance?: number;
   }) => input)
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context);
+    await assertSuperOrOwner(context, data.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const authPatch: Record<string, string> = {};
@@ -197,9 +213,12 @@ export const updateTrainingAccount = createServerFn({ method: "POST" })
 export const deleteAllTrainingAccounts = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertSuperAdmin(context);
+    await assertAdmin(context);
+    const superAdmin = await isSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows } = await supabaseAdmin.from("profiles").select("id").eq("is_training", true);
+    let q = supabaseAdmin.from("profiles").select("id").eq("is_training", true);
+    if (!superAdmin) q = q.eq("created_by", context.userId);
+    const { data: rows } = await q;
     for (const r of rows ?? []) {
       if (r.id === context.userId) continue;
       await supabaseAdmin.auth.admin.deleteUser(r.id);
@@ -269,7 +288,7 @@ export const updateUserAccount = createServerFn({ method: "POST" })
     displayName?: string; phone?: string; balance?: number; creditScore?: number;
   }) => input)
   .handler(async ({ data, context }) => {
-    await assertSuperAdmin(context);
+    await assertSuperOrOwner(context, data.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const authPatch: Record<string, string> = {};

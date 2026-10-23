@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { setViewAsId } from "@/lib/hooks";
-import { useAdminReadOnly } from "@/lib/admin-permissions";
+import { useAdminReadOnly, canManageAccount } from "@/lib/admin-permissions";
 import { LEVEL_FOR_TIER_INDEX, WAREHOUSE_GROUPS, WAREHOUSE_TIERS, groupLabelForSeed, groupSeedFromNote, makeSongs, premiumSongs, stickyTier, stickyTierIndex, tierIndexForLevel } from "@/lib/warehouse";
 import { useWarehouseSongs } from "@/lib/settings";
 import { useExclusiveTasks, useTaskSettings } from "@/lib/exclusive";
@@ -144,8 +144,13 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
-  const readOnly = useAdminReadOnly();
+export function UserDetail({ user, onBack }: { user: any; onBack: () => void }) {
+  const restricted = useAdminReadOnly();
+  const { data: myId } = useQuery({
+    queryKey: ["auth-uid"],
+    queryFn: async () => (await supabase.auth.getUser()).data.user?.id ?? null,
+  });
+  const readOnly = !canManageAccount(!restricted, myId, user);
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [editOpen, setEditOpen] = useState(false);

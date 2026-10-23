@@ -123,7 +123,7 @@ function AdminPage() {
             <AdminReadOnlyContext.Provider value={!isSuper}>
             {!isSuper && (
               <div className="mb-4 rounded-lg border border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
-                Read-only admin access — you can view records and use "View as User", but cannot add, edit or delete anything.
+                Limited admin access — you can view records and use "View as User". You can create training accounts and fully manage only the ones you created; you cannot approve payments or upgrades.
               </div>
             )}
             {shown === "overview"      && (
@@ -830,6 +830,7 @@ function usePayProfiles(ids: string[]) {
 }
 
 function Payments() {
+  const readOnly = useAdminReadOnly();
   const { txs, review } = useTxQueue((k) => PAY_KINDS.includes(k));
   const [tab, setTab] = useState<"all" | "deposits" | "withdrawals">("all");
   const [userId, setUserId] = useState<string | null>(null);
@@ -856,9 +857,9 @@ function Payments() {
           <h1 className="text-2xl font-bold">Payments</h1>
           <p className="text-sm text-muted-foreground">Deposit and withdrawal requests.</p>
         </div>
-        <Button size="sm" onClick={() => { setEditTx(null); setHistOpen(true); }}>
+        {!readOnly && <Button size="sm" onClick={() => { setEditTx(null); setHistOpen(true); }}>
           <Plus className="w-4 h-4 mr-1" /> Generate history
-        </Button>
+        </Button>}
       </div>
 
       <div className="flex gap-2">
@@ -878,7 +879,8 @@ function Payments() {
           rows={rows}
           names={names}
           onUser={tab === "all" ? undefined : setUserId}
-          onEdit={(t) => { setEditTx(t); setHistOpen(true); }}
+          readOnly={readOnly}
+          onEdit={readOnly ? undefined : (t) => { setEditTx(t); setHistOpen(true); }}
           onReview={(id, status) => review.mutate({ id, status })}
         />
       </div>
@@ -893,7 +895,8 @@ function Payments() {
             <PayList
               rows={userRows}
               names={names}
-              onEdit={(t) => { setEditTx(t); setHistOpen(true); }}
+              readOnly={readOnly}
+              onEdit={readOnly ? undefined : (t) => { setEditTx(t); setHistOpen(true); }}
               onReview={() => {}}
             />
           </div>
@@ -954,8 +957,8 @@ function ReceiptViewer({ path }: { path: string }) {
   );
 }
 
-function PayList({ rows, names, onReview, onUser, onEdit }: {
-  rows: any[]; names: Record<string, string>;
+function PayList({ rows, names, onReview, onUser, onEdit, readOnly = false }: {
+  rows: any[]; names: Record<string, string>; readOnly?: boolean;
   onReview: (id: string, status: "approved" | "rejected") => void;
   onUser?: (id: string) => void;
   onEdit?: (tx: any) => void;
@@ -989,7 +992,7 @@ function PayList({ rows, names, onReview, onUser, onEdit }: {
             {onEdit && (
               <Button size="sm" variant="outline" onClick={() => onEdit(t)}><Edit3 className="w-4 h-4" /></Button>
             )}
-            {t.status === "pending" && (
+            {t.status === "pending" && !readOnly && (
               <>
                 <Button size="sm" onClick={() => onReview(t.id, "approved")}><Check className="w-4 h-4" /></Button>
                 <Button size="sm" variant="destructive" onClick={() => onReview(t.id, "rejected")}><X className="w-4 h-4" /></Button>
@@ -1007,6 +1010,7 @@ function PayList({ rows, names, onReview, onUser, onEdit }: {
 
 
 function Upgrades() {
+  const readOnly = useAdminReadOnly();
   const qc = useQueryClient();
   const { txs } = useTxQueue((k) => k === "vip" || k === UPGRADE_KIND);
   const { data: names = {} } = usePayProfiles(txs.map((t: any) => t.user_id));
@@ -1051,7 +1055,7 @@ function Upgrades() {
                 <div className="text-[11px] text-muted-foreground">{new Date(t.created_at).toLocaleString()}</div>
                 <div className="mt-1"><StatusBadge status={t.status} /></div>
               </div>
-              {t.status === "pending" && (
+              {t.status === "pending" && !readOnly && (
                 <div className="flex gap-1 shrink-0">
                   <Button size="sm" disabled={review.isPending} onClick={() => review.mutate({ row: t, status: "approved" })}><Check className="w-4 h-4" /></Button>
                   <Button size="sm" variant="destructive" disabled={review.isPending} onClick={() => review.mutate({ row: t, status: "rejected" })}><X className="w-4 h-4" /></Button>

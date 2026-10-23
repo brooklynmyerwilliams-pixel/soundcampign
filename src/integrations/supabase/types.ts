@@ -91,6 +91,7 @@ export type Database = {
           avatar_url: string | null
           balance: number
           created_at: string
+          created_by: string | null
           credit_score: number
           display_name: string | null
           id: string
@@ -110,6 +111,7 @@ export type Database = {
           avatar_url?: string | null
           balance?: number
           created_at?: string
+          created_by?: string | null
           credit_score?: number
           display_name?: string | null
           id: string
@@ -129,6 +131,7 @@ export type Database = {
           avatar_url?: string | null
           balance?: number
           created_at?: string
+          created_by?: string | null
           credit_score?: number
           display_name?: string | null
           id?: string
@@ -432,6 +435,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_owns_training: {
+        Args: { _admin: string; _user: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
