@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Diagnose and fix Super Admin-created administrator sign-in; verify creation, email/username login and restricted panel access without leaving test accounts.
+- [done] Diagnosed saved administrator email typo (gmaill.com); verified assigned-password login for newly created admins. Hardened validated/confirmed account creation with rollback, private username/password authentication, both-admin-role gates and account-cache clearing. Super Admin can see/edit actual saved login email; wrong-credential feedback is actionable. Verified fresh creation, email/username/case-insensitive login, refresh, member-route redirect, restricted payment controls and server denial of privileged admin listing. Seventeen tests pass; verification accounts removed; publish required for code updates. Existing Newadmin11 password was not changed or verified.
 
 - [done] Cashout now reads only member-requested deposits (recharge), administrator-entered deposits, and withdrawals; preserves all statuses and older records through pagination, isolates its cache, reports read errors, and displays exact cents. Five tests pass. Checked both existing members through administrator View as User: histories match the database (currently no deposit/withdrawal rows), submission history remains intact, and revisiting Cashout does not leak cached promotions. Preview build OK; publish required for the live website.
 
