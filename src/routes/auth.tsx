@@ -4,7 +4,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 
 import { linkReferralCode } from "@/lib/admin.functions";
-import { resolveLoginEmail, checkInviteCode } from "@/lib/auth.functions";
+import { signInWithUsername, checkInviteCode } from "@/lib/auth.functions";
+import { hasAdminAccess } from "@/lib/auth-roles";
+import { setViewAsId } from "@/lib/hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 import { TopBar } from "@/components/AppShell";
 import { useI18n } from "@/lib/i18n";
 import { CountrySelect } from "@/components/CountrySelect";
@@ -102,7 +106,8 @@ function AuthPage() {
   const navigate = useNavigate();
   
   const linkReferral = useServerFn(linkReferralCode);
-  const resolveEmail = useServerFn(resolveLoginEmail);
+  const usernameSignIn = useServerFn(signInWithUsername);
+  const queryClient = useQueryClient();
   const checkInvite = useServerFn(checkInviteCode);
 
   // shared
@@ -127,24 +132,29 @@ function AuthPage() {
       const id = email.trim();
       if (!id) { setErrors({ email: "Enter your email or username" }); return; }
       if (!password) { setErrors({ password: "Enter your password" }); return; }
-      let loginEmail = id;
       if (!id.includes("@")) {
-        const resolved = await resolveEmail({ data: { username: id } });
-        loginEmail = resolved.email;
+        const session = await usernameSignIn({ data: { username: id, password } });
+        const { error } = await supabase.auth.setSession(session);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email: id.toLowerCase(), password });
+        if (error) throw error;
       }
-      const { error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
-      if (error) throw error;
       await assertNotSuspended();
       const { data: auth } = await supabase.auth.getUser();
       let isAdmin = false;
       if (auth.user) {
-        const { data: roles } = await supabase
+        const { data: roles, error: roleError } = await supabase
           .from("user_roles").select("role").eq("user_id", auth.user.id);
-        isAdmin = !!roles?.some((r) => r.role === "admin");
+        if (roleError) throw new Error("Could not verify account access. Please try again.");
+        isAdmin = hasAdminAccess(roles ?? []);
       }
+      setViewAsId(null);
+      queryClient.clear();
       navigate({ to: isAdmin ? "/admin" : "/dashboard" });
     } catch (err: unknown) {
-      setMsg(err instanceof Error ? err.message : "Authentication failed");
+      const message = err instanceof Error ? err.message : "Authentication failed";
+      setMsg(message === "Invalid login credentials" ? "Email/username or password is incorrect. Use the exact username or email saved on your account and the assigned password." : message);
     } finally { setLoading(false); }
   }
 
@@ -219,15 +229,15 @@ function AuthPage() {
 
           {mode === "signin" ? (
             <form onSubmit={signIn} className="space-y-3">
-              <Field label="Email or Username">
-                <IconInput icon={<Mail className="w-4 h-4" />} placeholder="you@example.com or username" value={email} onChange={(e)=>setEmail(e.target.value)} required />
+              <Field label="Email or Username" error={errors['email']}>
+                <IconInput aria-label="Email or Username" autoComplete="username" icon={<Mail className="w-4 h-4" />} placeholder="you@example.com or username" value={email} onChange={(e)=>setEmail(e.target.value)} required />
               </Field>
-              <Field label={t("auth.password")}>
-                <IconInput icon={<Lock className="w-4 h-4" />} reveal placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
+              <Field label={t("auth.password")} error={errors['password']}>
+                <IconInput aria-label="Password" autoComplete="current-password" icon={<Lock className="w-4 h-4" />} reveal placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value)} required />
               </Field>
-              <button disabled={loading} className="w-full bg-[var(--nrc-green)] text-primary-foreground font-bold py-3 rounded-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+              <Button type="submit" disabled={loading} className="w-full h-auto font-bold py-3 text-sm">
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />} {t("auth.signIn")}
-              </button>
+              </Button>
             </form>
           ) : (
             <form onSubmit={signUp} className="space-y-4">
@@ -294,7 +304,7 @@ function AuthPage() {
             </form>
           )}
 
-          {msg && <p className="text-xs text-destructive mt-3">{msg}</p>}
+          {msg && <p role="alert" className="text-xs text-destructive mt-3">{msg}</p>}
         </div>
         <div className="text-center mt-4">
           <Link to="/" className="text-xs text-muted-foreground">{t("auth.backHome")}</Link>

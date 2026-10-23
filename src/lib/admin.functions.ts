@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { adminAccountSchema, provisionAdminAccount } from "@/lib/admin-account";
 
 async function assertAdmin(context: { supabase: any; userId: string }) {
   const { data: isAdmin, error } = await context.supabase.rpc("has_role", {
@@ -314,41 +315,35 @@ export const updateUserAccount = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-/** Create a new administrator account. Admin only. */
+/** List administrator login details for the Super Admin only. */
+export const listAdminAccounts = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertSuperAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: roles, error } = await supabaseAdmin.from("user_roles")
+      .select("user_id, role").in("role", ["admin", "super_admin"]);
+    if (error) throw new Error(error.message);
+    const ids = [...new Set((roles ?? []).map((r) => r.user_id))];
+    if (!ids.length) return [];
+    const { data: profiles, error: profileError } = await supabaseAdmin.from("profiles").select("*").in("id", ids);
+    if (profileError) throw new Error(profileError.message);
+    return Promise.all((profiles ?? []).map(async (profile) => {
+      const { data, error: authError } = await supabaseAdmin.auth.admin.getUserById(profile.id);
+      if (authError) throw new Error(authError.message);
+      return { ...profile, email: data.user.email ?? "", isSuper: (roles ?? []).some((r) => r.user_id === profile.id && r.role === "super_admin") };
+    }));
+  });
+
+/** Create a confirmed administrator with the exact assigned login credentials. Super Admin only. */
 export const createAdminAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: {
-    email: string; password: string; username: string; displayName?: string; phone?: string;
-  }) => input)
+  .inputValidator((input) => adminAccountSchema.parse(input))
   .handler(async ({ data, context }) => {
     await assertSuperAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email.trim().toLowerCase(),
-      password: data.password,
-      email_confirm: true,
-      user_metadata: {
-        username: data.username,
-        display_name: data.displayName || data.username,
-      },
-    });
-    if (error) throw new Error(error.message);
-    const uid = created.user!.id;
-
-    const { error: pErr } = await supabaseAdmin.from("profiles").upsert({
-      id: uid,
-      username: data.username,
-      display_name: data.displayName || data.username,
-      phone: data.phone || null,
-    });
-    if (pErr) throw new Error(pErr.message);
-
-    const { error: rErr } = await supabaseAdmin
-      .from("user_roles").insert({ user_id: uid, role: "admin" });
-    if (rErr) throw new Error(rErr.message);
-
-    return { ok: true, userId: uid };
+    return provisionAdminAccount(supabaseAdmin, data);
   });
 
 /** Promote an existing user to Admin or remove Admin. Super Admin only. */
