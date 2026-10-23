@@ -36,6 +36,7 @@ export function TrainingAccounts() {
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ["training-accounts"],
     queryFn: () => list({ data: undefined as never }),
+    refetchInterval: 4000,
   });
 
   const [open, setOpen] = useState(false);
