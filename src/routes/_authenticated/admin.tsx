@@ -1084,16 +1084,41 @@ function Upgrades() {
 function ManageAdmins() {
   const [editing, setEditing] = useState<any>(null);
   const [creating, setCreating] = useState(false);
+  const [promoteQ, setPromoteQ] = useState("");
+  const qc = useQueryClient();
+  const setRole = useServerFn(setAdminRole);
   const { data: admins = [] } = useQuery({
     queryKey: ["admin-list"],
     queryFn: async () => {
-      const { data: roles } = await supabase.from("user_roles").select("user_id, role").eq("role", "admin");
-      const ids = (roles ?? []).map((r) => r.user_id);
+      const { data: roles } = await supabase.from("user_roles").select("user_id, role").in("role", ["admin", "super_admin"]);
+      const supers = new Set((roles ?? []).filter((r) => r.role === "super_admin").map((r) => r.user_id));
+      const ids = [...new Set((roles ?? []).map((r) => r.user_id))];
       if (ids.length === 0) return [];
       const { data: profs } = await supabase.from("profiles").select("*").in("id", ids);
-      return profs ?? [];
+      return (profs ?? []).map((p) => ({ ...p, isSuper: supers.has(p.id) }));
     },
   });
+  const { data: candidates = [] } = useQuery({
+    queryKey: ["admin-promote-search", promoteQ],
+    enabled: promoteQ.trim().length >= 2,
+    queryFn: async () => {
+      const q = promoteQ.trim().replace(/[%,()]/g, "");
+      const { data } = await supabase.from("profiles").select("id, username, display_name")
+        .or(`username.ilike.%${q}%,display_name.ilike.%${q}%`).limit(8);
+      return data ?? [];
+    },
+  });
+  const changeRole = useMutation({
+    mutationFn: (v: { userId: string; makeAdmin: boolean }) => setRole({ data: v }),
+    onSuccess: (_r, v) => {
+      toast.success(v.makeAdmin ? "User promoted to Admin" : "Admin access removed");
+      setPromoteQ("");
+      qc.invalidateQueries({ queryKey: ["admin-list"] });
+      qc.invalidateQueries({ queryKey: ["admin-users"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not change role"),
+  });
+  const adminIds = new Set(admins.map((a: any) => a.id));
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-3">
@@ -1102,6 +1127,19 @@ function ManageAdmins() {
           <p className="text-sm text-muted-foreground">Accounts with administrator role.</p>
         </div>
         <Button size="sm" onClick={() => setCreating(true)}><Plus className="w-4 h-4 mr-1" /> New Admin</Button>
+      </div>
+      <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+        <Label>Promote an existing user to Admin</Label>
+        <Input placeholder="Search by username or name…" value={promoteQ} onChange={(e) => setPromoteQ(e.target.value)} />
+        {candidates.filter((c: any) => !adminIds.has(c.id)).map((c: any) => (
+          <div key={c.id} className="flex items-center justify-between gap-2 text-sm">
+            <span className="truncate">{c.display_name || c.username} <span className="text-muted-foreground">@{c.username}</span></span>
+            <Button size="sm" disabled={changeRole.isPending}
+              onClick={() => { if (confirm(`Make ${c.username} a read-only Admin?`)) changeRole.mutate({ userId: c.id, makeAdmin: true }); }}>
+              Make Admin
+            </Button>
+          </div>
+        ))}
       </div>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         {admins.length === 0
@@ -1119,8 +1157,14 @@ function ManageAdmins() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge className="bg-[var(--nrc-gold)] text-[var(--nrc-green-dark)]">Admin</Badge>
+                    <Badge className="bg-[var(--nrc-gold)] text-[var(--nrc-green-dark)]">{a.isSuper ? "Super Admin" : "Admin"}</Badge>
                     <Button size="sm" variant="outline" onClick={() => setEditing(a)}>Edit</Button>
+                    {!a.isSuper && (
+                      <Button size="sm" variant="outline" className="text-destructive" disabled={changeRole.isPending}
+                        onClick={() => { if (confirm(`Remove admin access from ${a.username}?`)) changeRole.mutate({ userId: a.id, makeAdmin: false }); }}>
+                        Remove Admin
+                      </Button>
+                    )}
                   </div>
                 </li>
               ))}
