@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Diagnose and fix Super Admin-created administrator sign-in; verify creation, email/username login and restricted panel access without leaving test accounts.
+
 - [done] Cashout now reads only member-requested deposits (recharge), administrator-entered deposits, and withdrawals; preserves all statuses and older records through pagination, isolates its cache, reports read errors, and displays exact cents. Five tests pass. Checked both existing members through administrator View as User: histories match the database (currently no deposit/withdrawal rows), submission history remains intact, and revisiting Cashout does not leak cached promotions. Preview build OK; publish required for the live website.
 
 - [done] Fixed toast-only contact saves and hardcoded support links with durable role-checked revisioned storage, confirmed removal, empty/stale-write protection, and shared live contacts in dashboard and global support. Verified two independent administrator contexts and a phone-sized visitor context: live update in 1.14 seconds, refresh/logout/session persistence, save errors, stale draft blocking, database permission protections, and explicit removal/cancel. Eight tests pass; temporary contacts removed. Publish required; previously unsaved real contacts must be re-entered. Member dashboard uses the same verified links component; no member session was used.
