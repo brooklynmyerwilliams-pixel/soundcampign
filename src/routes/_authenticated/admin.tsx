@@ -8,7 +8,8 @@ import { adjustBalance } from "@/lib/balance";
 import { walletFromNote, shortAddress, noteText } from "@/lib/crypto";
 import { useServerFn } from "@tanstack/react-start";
 import { AdminReadOnlyContext, useAdminReadOnly, canOpenSection } from "@/lib/admin-permissions";
-import { createAdminAccount, setAdminRole } from "@/lib/admin.functions";
+import { createAdminAccount, listAdminAccounts, setAdminRole } from "@/lib/admin.functions";
+import { adminAccountSchema } from "@/lib/admin-account";
 import { makeSongs, premiumSongs, WAREHOUSE_TIERS as MEMBERSHIP_TIERS, type Song } from "@/lib/warehouse";
 import { useWarehouseSongs, saveWarehouseSongs } from "@/lib/settings";
 
@@ -1091,16 +1092,10 @@ function ManageAdmins() {
   const [promoteQ, setPromoteQ] = useState("");
   const qc = useQueryClient();
   const setRole = useServerFn(setAdminRole);
-  const { data: admins = [] } = useQuery({
+  const listAdmins = useServerFn(listAdminAccounts);
+  const { data: admins = [], isPending: adminsLoading, error: adminsError } = useQuery({
     queryKey: ["admin-list"],
-    queryFn: async () => {
-      const { data: roles } = await supabase.from("user_roles").select("user_id, role").in("role", ["admin", "super_admin"]);
-      const supers = new Set((roles ?? []).filter((r) => r.role === "super_admin").map((r) => r.user_id));
-      const ids = [...new Set((roles ?? []).map((r) => r.user_id))];
-      if (ids.length === 0) return [];
-      const { data: profs } = await supabase.from("profiles").select("*").in("id", ids);
-      return (profs ?? []).map((p) => ({ ...p, isSuper: supers.has(p.id) }));
-    },
+    queryFn: () => listAdmins(),
   });
   const { data: candidates = [] } = useQuery({
     queryKey: ["admin-promote-search", promoteQ],
@@ -1146,7 +1141,9 @@ function ManageAdmins() {
         ))}
       </div>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
-        {admins.length === 0
+        {adminsError ? <div role="alert" className="p-6 text-sm text-destructive">Could not load administrator accounts. Please refresh and try again.</div>
+          : adminsLoading ? <div className="p-6 text-sm text-muted-foreground text-center">Loading…</div>
+          : admins.length === 0
           ? <div className="p-6 text-sm text-muted-foreground text-center">No admins.</div>
           : (
             <ul className="divide-y divide-border">
@@ -1155,6 +1152,7 @@ function ManageAdmins() {
                   <div className="min-w-0">
                     <div className="font-medium truncate">{a.display_name || a.username}</div>
                     <div className="text-[11px] text-muted-foreground truncate">@{a.username}{a.phone ? ` · ${a.phone}` : ""}</div>
+                    <div className="text-xs text-muted-foreground break-all">Login email: {a.email}</div>
                     <div className="mt-1 flex flex-wrap items-baseline gap-x-2 text-xs">
                       <span className="text-muted-foreground">Referral code</span>
                       <span className="font-mono font-semibold break-all">{a.invite_code || "—"}</span>
@@ -1210,7 +1208,7 @@ function NewAdminDialog({ open, onClose }: { open: boolean; onClose: () => void 
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const valid = email.trim() && password.length >= 6 && username.trim();
+  const valid = adminAccountSchema.safeParse({ email, password, username, displayName, phone }).success;
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
@@ -1220,10 +1218,10 @@ function NewAdminDialog({ open, onClose }: { open: boolean; onClose: () => void 
           <DialogDescription>This account signs in straight into the admin panel.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
-          <div><Label>Email</Label><Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
-          <div><Label>Password</Label><Input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 6 characters" /></div>
+          <div><Label htmlFor="admin-email">Email</Label><Input id="admin-email" type="email" autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} /></div>
+          <div><Label htmlFor="admin-password">Password</Label><Input id="admin-password" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min 6 characters" /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label>Username</Label><Input value={username} onChange={(e) => setUsername(e.target.value)} /></div>
+            <div><Label htmlFor="admin-username">Username</Label><Input id="admin-username" autoComplete="off" value={username} onChange={(e) => setUsername(e.target.value)} /></div>
             <div><Label>Display name</Label><Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} /></div>
           </div>
           <div><Label>Phone</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} /></div>

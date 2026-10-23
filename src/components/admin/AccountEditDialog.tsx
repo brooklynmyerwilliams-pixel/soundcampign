@@ -21,7 +21,7 @@ export function AccountEditDialog({ account, open, onClose, invalidateKeys = [] 
   const [displayName, setDisplayName] = useState(account.display_name || "");
   const [username, setUsername] = useState(account.username || "");
   const [phone, setPhone] = useState(account.phone || "");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(account.email || "");
   const [password, setPassword] = useState("");
   const [creditScore, setCreditScore] = useState(String(account.credit_score ?? 100));
 
@@ -70,7 +70,7 @@ export function AccountEditDialog({ account, open, onClose, invalidateKeys = [] 
           </div>
           <div>
             <Label>Password <span className="text-muted-foreground text-xs">(leave blank to keep)</span></Label>
-            <Input value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
         </div>
         <DialogFooter>
